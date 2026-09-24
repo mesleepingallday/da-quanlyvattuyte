@@ -1,0 +1,29 @@
+{
+  "khoa": ["Khoa Nội", "Khoa Ngoại", "Khoa Cấp cứu", "Khoa Xét nghiệm", "Khoa Sản"],
+  "vatTu": [
+    {"ma": "VT001", "ten": "Bơm tiêm 5ml", "dvt": "Cái", "nhom": "Tiêm truyền", "bq": "Phòng", "gia": 1150, "tonMin": 500},
+    {"ma": "VT002", "ten": "Găng tay khám size M", "dvt": "Hộp", "nhom": "Bảo hộ", "bq": "Phòng", "gia": 68000, "tonMin": 40},
+    {"ma": "VT003", "ten": "Bông y tế 1kg", "dvt": "Gói", "nhom": "Băng gạc", "bq": "Phòng", "gia": 145000, "tonMin": 10},
+    {"ma": "VT004", "ten": "Kim luồn tĩnh mạch 22G", "dvt": "Cái", "nhom": "Tiêm truyền", "bq": "Phòng", "gia": 9800, "tonMin": 200},
+    {"ma": "VT005", "ten": "Dây truyền dịch", "dvt": "Bộ", "nhom": "Tiêm truyền", "bq": "Phòng", "gia": 5200, "tonMin": 300},
+    {"ma": "VT006", "ten": "Que thử đường huyết", "dvt": "Hộp", "nhom": "Xét nghiệm", "bq": "Mát", "gia": 210000, "tonMin": 15},
+    {"ma": "HC001", "ten": "Hóa chất xét nghiệm Glucose", "dvt": "Lọ", "nhom": "Hóa chất", "bq": "Lạnh", "gia": 1350000, "tonMin": 4}
+  ],
+  "lo": [
+    {"ma": "VT001", "soLo": "BT2402", "hsd": "2026-11-20", "sl": 800},
+    {"ma": "VT001", "soLo": "BT2409", "hsd": "2027-08-15", "sl": 1500},
+    {"ma": "VT002", "soLo": "GT2310", "hsd": "2026-10-12", "sl": 25},
+    {"ma": "VT002", "soLo": "GT2405", "hsd": "2027-05-01", "sl": 60},
+    {"ma": "VT003", "soLo": "BG2401", "hsd": "2027-01-30", "sl": 18},
+    {"ma": "VT004", "soLo": "KL2311", "hsd": "2026-12-05", "sl": 150},
+    {"ma": "VT005", "soLo": "DT2406", "hsd": "2027-06-30", "sl": 420},
+    {"ma": "VT006", "soLo": "QT2403", "hsd": "2026-10-08", "sl": 12},
+    {"ma": "HC001", "soLo": "HC2405", "hsd": "2027-02-28", "sl": 6}
+  ],
+  "nguoiDung": [
+    {"ten": "Nguyễn Thị Lan", "vaiTro": "ĐD khoa", "khoa": "Khoa Nội"},
+    {"ten": "Trần Văn Hùng", "vaiTro": "Thủ kho"},
+    {"ten": "Lê Thị Kim Hạnh", "vaiTro": "Trưởng P.VTTBYT"},
+    {"ten": "Phạm Minh Tuấn", "vaiTro": "Kế toán dược"}
+  ]
+}

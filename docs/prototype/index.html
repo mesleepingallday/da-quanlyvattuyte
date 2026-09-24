@@ -1,0 +1,698 @@
+<title>Kho Vật tư BV Phú Nhuận</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --primary:#0E7C86;--primary-strong:#0A626A;--primary-soft:#E3F2F3;--on-primary:#fff;
+  --bg:#F4F7F7;--surface:#FFFFFF;--surface-2:#F8FAFA;--border:#DCE4E5;--text:#15272B;--muted:#5B6E72;
+  --s-draft:#6B7A7D;--s-wait:#B7791F;--s-ok:#2B6CB0;--s-done:#2F855A;--s-bad:#C53030;--s-warn:#DD6B20;
+  --s-wait-bg:#FBF3E4;--s-ok-bg:#E8F0FA;--s-done-bg:#E6F4EC;--s-bad-bg:#FBEAEA;--s-draft-bg:#EEF1F1;--s-warn-bg:#FDF0E6;
+  --shadow:0 1px 2px rgba(16,40,44,.06),0 4px 16px rgba(16,40,44,.06);
+  --r:6px;--rc:10px;
+  font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --primary:#3FB8C1;--primary-strong:#62CAD2;--primary-soft:#133A3E;--on-primary:#062326;
+  --bg:#0F1719;--surface:#172225;--surface-2:#1B282B;--border:#2A393C;--text:#E4ECED;--muted:#93A7AB;
+  --s-draft:#A3B1B3;--s-wait:#E3AE5B;--s-ok:#7DB0EA;--s-done:#6BC795;--s-bad:#F08080;--s-warn:#F2A15E;
+  --s-wait-bg:#3A2E17;--s-ok-bg:#1B2C42;--s-done-bg:#17332A;--s-bad-bg:#3E1D1D;--s-draft-bg:#243033;--s-warn-bg:#3C2A1A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --primary:#3FB8C1;--primary-strong:#62CAD2;--primary-soft:#133A3E;--on-primary:#062326;
+  --bg:#0F1719;--surface:#172225;--surface-2:#1B282B;--border:#2A393C;--text:#E4ECED;--muted:#93A7AB;
+  --s-draft:#A3B1B3;--s-wait:#E3AE5B;--s-ok:#7DB0EA;--s-done:#6BC795;--s-bad:#F08080;--s-warn:#F2A15E;
+  --s-wait-bg:#3A2E17;--s-ok-bg:#1B2C42;--s-done-bg:#17332A;--s-bad-bg:#3E1D1D;--s-draft-bg:#243033;--s-warn-bg:#3C2A1A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:inherit;font-size:14px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.25}
+h1{font-size:22px;font-weight:700}
+h2{font-size:16px;font-weight:600}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.muted{color:var(--muted)}
+a{color:var(--primary)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+
+/* shell */
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100%}
+.side{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:env(safe-area-inset-top,0px);height:100vh}
+.brand{display:flex;gap:10px;align-items:center;padding:16px;border-bottom:1px solid var(--border)}
+.logo{width:34px;height:34px;border-radius:8px;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;font-weight:700;flex:none}
+.brand b{display:block;font-size:14px;line-height:1.2}
+.brand small{color:var(--muted);font-size:12px}
+.nav{display:flex;flex-direction:column;gap:2px;padding:12px 8px;overflow:auto;flex:1}
+.nav a{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:var(--r);text-decoration:none;color:var(--text);font-weight:500}
+.nav a:hover{background:var(--surface-2)}
+.nav a.on{background:var(--primary-soft);color:var(--primary-strong)}
+.nav .cnt{background:var(--s-wait-bg);color:var(--s-wait);border-radius:10px;padding:0 7px;font-size:12px;font-weight:600}
+.nav .sec{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:12px 12px 4px}
+.me{padding:12px 16px;border-top:1px solid var(--border);display:grid;gap:8px}
+.me label{font-size:12px;color:var(--muted)}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{height:56px;display:flex;align-items:center;gap:12px;padding-inline:24px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.crumb{color:var(--muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crumb b{color:var(--text);font-weight:600}
+.search{width:240px;padding:7px 10px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface-2)}
+.bell{position:relative;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;cursor:pointer}
+.bell i{position:absolute;top:-4px;right:-4px;background:var(--s-bad);color:#fff;font-style:normal;font-size:11px;border-radius:9px;padding:0 5px;font-weight:600}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--primary-soft);color:var(--primary-strong);display:grid;place-items:center;font-weight:600}
+.content{padding:24px;display:grid;gap:16px;align-content:start}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.pagehead p{margin:4px 0 0;color:var(--muted)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* components */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rc)}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.card-b{padding:16px}
+.btn{border:1px solid var(--border);background:var(--surface);border-radius:var(--r);padding:7px 14px;font-weight:500;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surface-2)}
+.btn.p{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.btn.p:hover{background:var(--primary-strong)}
+.btn.d{color:var(--s-bad);border-color:currentColor;background:transparent}
+.btn.g{border-color:transparent;background:transparent;color:var(--primary)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:12px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-draft{color:var(--s-draft);background:var(--s-draft-bg)}
+.b-wait{color:var(--s-wait);background:var(--s-wait-bg)}
+.b-ok{color:var(--s-ok);background:var(--s-ok-bg)}
+.b-done{color:var(--s-done);background:var(--s-done-bg)}
+.b-bad{color:var(--s-bad);background:var(--s-bad-bg)}
+.b-warn{color:var(--s-warn);background:var(--s-warn-bg)}
+.chip{display:inline-block;padding:1px 8px;border-radius:4px;font-size:12px;border:1px solid var(--border);color:var(--muted)}
+.chip.lanh{color:var(--s-ok);border-color:currentColor}
+.chip.mat{color:var(--primary);border-color:currentColor}
+.chip.fefo{color:var(--s-done);border-color:currentColor;font-weight:600}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:9px 12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle}
+th{font-size:12px;font-weight:600;color:var(--muted);background:var(--surface-2);white-space:nowrap}
+tbody tr:hover{background:var(--surface-2)}
+tr.sub td{background:var(--bg);font-size:13px}
+tr.sub td:first-child{padding-left:32px}
+tfoot td{font-weight:700;background:var(--surface-2)}
+.red{color:var(--s-bad);font-weight:600}.orange{color:var(--s-warn);font-weight:600}
+input.f,select.f,textarea.f{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface)}
+input.f.bad{border-color:var(--s-bad);background:var(--s-bad-bg)}
+input.qty{width:90px;text-align:right}
+.field{display:grid;gap:4px}
+.field label{font-size:12px;font-weight:500;color:var(--muted)}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.grid2{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;align-items:start}
+.cols2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.kpi{padding:16px;display:grid;gap:4px;cursor:pointer;text-align:left;border:1px solid var(--border);background:var(--surface);border-radius:var(--rc)}
+.kpi:hover{border-color:var(--primary)}
+.kpi span{color:var(--muted);font-size:13px}
+.kpi b{font-size:28px;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi small{font-size:12px}
+.kpi.wait b{color:var(--s-wait)}.kpi.bad b{color:var(--s-bad)}.kpi.warn b{color:var(--s-warn)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);padding-inline:12px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:10px 12px;cursor:pointer;color:var(--muted);font-weight:500;border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--primary);border-bottom-color:var(--primary)}
+.tabs em{font-style:normal;font-size:12px;background:var(--surface-2);border-radius:9px;padding:0 6px;margin-left:4px}
+.alert{padding:10px 14px;border-radius:var(--r);border:1px solid;font-size:13px}
+.alert.warn{color:var(--s-wait);background:var(--s-wait-bg)}
+.alert.info{color:var(--s-ok);background:var(--s-ok-bg)}
+.alert.bad{color:var(--s-bad);background:var(--s-bad-bg)}
+.timeline{list-style:none;margin:0;padding:0;display:grid}
+.timeline li{display:grid;grid-template-columns:22px 1fr;gap:10px;position:relative;padding-bottom:18px}
+.timeline li:not(:last-child)::after{content:"";position:absolute;left:10px;top:22px;bottom:0;width:2px;background:var(--border)}
+.timeline li.done:not(:last-child)::after{background:var(--s-done)}
+.dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:var(--surface);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--muted)}
+li.done .dot{background:var(--s-done);border-color:var(--s-done);color:#fff}
+li.cur .dot{border-color:var(--s-wait);color:var(--s-wait)}
+li.rej .dot{background:var(--s-bad);border-color:var(--s-bad);color:#fff}
+.timeline b{display:block;font-weight:600}
+.timeline small{color:var(--muted)}
+.empty{padding:32px;text-align:center;color:var(--muted)}
+.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.meta div span{display:block;font-size:12px;color:var(--muted)}
+.meta div b{font-weight:600}
+.stepbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}
+.stepbar span{padding:3px 8px;border-radius:4px;background:var(--surface-2);border:1px solid var(--border)}
+.stepbar span.on{background:var(--primary-soft);color:var(--primary-strong);border-color:var(--primary)}
+
+/* login */
+.login{min-height:100%;display:grid;grid-template-columns:1fr 1fr}
+.login .hero{background:var(--primary);color:var(--on-primary);padding:48px;display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.login .hero h1{font-size:32px;max-width:14ch}
+.login .hero p{max-width:44ch;opacity:.9}
+.login .hero .logo{background:var(--on-primary);color:var(--primary)}
+.login .form{display:grid;place-items:center;padding:48px 24px;background:var(--surface)}
+.login form{width:100%;max-width:360px;display:grid;gap:14px}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quick .btn{text-align:left;white-space:normal}
+.quick .btn small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+
+/* print */
+.paper{background:#fff;color:#111;max-width:794px;margin-inline:auto;padding:48px 56px;box-shadow:var(--shadow);border-radius:4px;font-size:13px}
+.paper table th,.paper table td{border:1px solid #444;padding:6px 8px;background:#fff;color:#111}
+.paper .hd{display:flex;justify-content:space-between;gap:16px;text-transform:uppercase;font-size:12px}
+.paper h2{text-align:center;font-size:18px;margin:24px 0 4px;text-transform:uppercase}
+.paper .c{text-align:center}
+.sign{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;margin-top:32px;gap:8px}
+.sign b{display:block}
+.sign i{display:block;font-size:12px;color:#555;margin-bottom:56px}
+
+/* overlay */
+.ov{position:fixed;inset:0;background:rgba(10,25,28,.45);display:grid;place-items:center;padding:16px;z-index:50}
+.modal{background:var(--surface);border-radius:var(--rc);width:100%;max-width:460px;box-shadow:var(--shadow);display:grid;gap:14px;padding:20px}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--surface);border-left:1px solid var(--border);z-index:51;padding:20px;display:grid;gap:14px;align-content:start;overflow:auto;padding-top:calc(20px + env(safe-area-inset-top,0px))}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:var(--r);z-index:60;box-shadow:var(--shadow);max-width:calc(100% - 32px)}
+.demo{background:var(--primary-soft);border:1px dashed var(--primary);color:var(--primary-strong);border-radius:var(--rc);padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:13px}
+.demo b{font-weight:700}
+
+@media (max-width:1000px){
+  .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid2,.cols2{grid-template-columns:1fr}
+  .meta{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  .side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--border)}
+  .nav{flex-direction:row;overflow-x:auto;padding:8px 16px}
+  .nav .sec{display:none}
+  .nav a{white-space:nowrap;gap:6px}
+  .me{grid-template-columns:1fr;padding-inline:16px}
+  .brand{padding-inline:16px}
+  .top{padding-inline:16px;position:static}
+  .search{display:none}
+  .content{padding:16px}
+  .login{grid-template-columns:1fr}
+  .login .hero{padding:32px 16px}
+  .paper{padding:24px 16px}
+  .quick{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:no-preference){.btn,.kpi,.nav a{transition:background .15s,border-color .15s}}
+</style>
+
+<div id="root"></div>
+
+<script>
+const TODAY = new Date('2026-09-24T00:00:00');
+const ROLES = {
+  dd:  {name:'Nguyễn Thị Lan', title:'ĐD khoa – Khoa Nội', short:'NL'},
+  kho: {name:'Trần Văn Hùng', title:'Thủ kho – P.VTTBYT', short:'TH'},
+  tp:  {name:'Lê Thị Kim Hạnh', title:'Trưởng P.VTTBYT', short:'KH'},
+  kt:  {name:'Phạm Minh Tuấn', title:'Kế toán dược – P.TCKT', short:'MT'},
+};
+const ITEMS = [
+  {ma:'VT001',ten:'Bơm tiêm 5ml',dvt:'Cái',nhom:'Tiêm truyền',bq:'Phòng',sodk:'2100345ĐKLH',gia:1150,min:500,avg:950,bn:1500,bx:1100},
+  {ma:'VT002',ten:'Găng tay khám size M',dvt:'Hộp',nhom:'Bảo hộ',bq:'Phòng',sodk:'2200871ĐKLH',gia:68000,min:40,avg:70,bn:60,bx:74},
+  {ma:'VT003',ten:'Bông y tế 1kg',dvt:'Gói',nhom:'Băng gạc',bq:'Phòng',sodk:'2000112ĐKLH',gia:145000,min:10,avg:9,bn:10,bx:8},
+  {ma:'VT004',ten:'Kim luồn tĩnh mạch 22G',dvt:'Cái',nhom:'Tiêm truyền',bq:'Phòng',sodk:'2300764ĐKLH',gia:9800,min:200,avg:230,bn:0,bx:240},
+  {ma:'VT005',ten:'Dây truyền dịch',dvt:'Bộ',nhom:'Tiêm truyền',bq:'Phòng',sodk:'2100998ĐKLH',gia:5200,min:300,avg:310,bn:400,bx:330},
+  {ma:'VT006',ten:'Que thử đường huyết',dvt:'Hộp',nhom:'Xét nghiệm',bq:'Mát',sodk:'2201450ĐKLH',gia:210000,min:15,avg:14,bn:0,bx:12},
+  {ma:'HC001',ten:'Hóa chất xét nghiệm Glucose',dvt:'Lọ',nhom:'Hóa chất',bq:'Lạnh',sodk:'2305521ĐKLH',gia:1350000,min:4,avg:3,bn:4,bx:3},
+];
+const S = {
+  role:null, route:'dashboard', sel:null, tab:'all', vtq:'', vtNhom:'', khoFilter:'Kho chính', reportMonth:'09/2026',
+  lots:[
+    {ma:'VT001',lo:'BT2402',hsd:'2026-11-20',sl:800,vt:'A1-02'},
+    {ma:'VT001',lo:'BT2409',hsd:'2027-08-15',sl:1500,vt:'A1-03'},
+    {ma:'VT002',lo:'GT2310',hsd:'2026-10-12',sl:25,vt:'B2-01'},
+    {ma:'VT002',lo:'GT2405',hsd:'2027-05-01',sl:60,vt:'B2-02'},
+    {ma:'VT003',lo:'BG2401',hsd:'2027-01-30',sl:18,vt:'C1-01'},
+    {ma:'VT004',lo:'KL2311',hsd:'2026-12-05',sl:150,vt:'A2-01'},
+    {ma:'VT005',lo:'DT2406',hsd:'2027-06-30',sl:420,vt:'A2-04'},
+    {ma:'VT006',lo:'QT2403',hsd:'2026-10-08',sl:12,vt:'Tủ mát 1'},
+    {ma:'HC001',lo:'HC2405',hsd:'2027-02-28',sl:6,vt:'Tủ lạnh 2'},
+    {ma:'VT004',lo:'KL2208',hsd:'2026-10-02',sl:30,vt:'Biệt trữ',q:true},
+  ],
+  moves:[], // {ma, type:'N'|'X', sl}
+  seq:13,
+  slips:[
+    mk('PL-2026-0009','Khoa Cấp cứu','2026-09-15','done',[['VT001',200],['VT005',60]],'Phạm Thu Hà'),
+    mk('PL-2026-0010','Khoa Ngoại','2026-09-19','done',[['VT002',10],['VT003',2]],'Võ Minh Khôi'),
+    mk('PL-2026-0011','Khoa Sản','2026-09-22','bad',[['VT004',100]],'Đặng Ngọc Mai','Số lượng vượt định mức tháng, đề nghị lập lại'),
+    mk('PL-2026-0012','Khoa Nội','2026-09-23','cho_xn',[['VT001',300],['VT002',8],['VT006',4]],'Nguyễn Thị Lan'),
+    mk('PL-2026-0013','Khoa Xét nghiệm','2026-09-24','cho_duyet',[['HC001',2],['VT006',3]],'Lý Văn Tâm'),
+  ],
+  draft:null, alloc:null, modal:null, drawer:null, toast:null, nhap:null, dutru:null,
+};
+function mk(so,khoa,ngay,st,lines,nguoi,lydo){
+  const h=[{a:'Lập phiếu',by:nguoi,t:ngay+' 08:10'},{a:'Trưởng khoa duyệt',by:'Trưởng '+khoa.replace('Khoa ','khoa '),t:ngay+' 09:02'}];
+  if(['cho_duyet','da_duyet','done','bad'].includes(st)) h.push({a:'Kho xác nhận',by:'Trần Văn Hùng',t:ngay+' 10:15'});
+  if(['da_duyet','done'].includes(st)) h.push({a:'Trưởng P.VTTBYT duyệt',by:'Lê Thị Kim Hạnh',t:ngay+' 14:30'});
+  if(st==='bad') h.push({a:'Từ chối',by:'Lê Thị Kim Hạnh',t:ngay+' 14:30',rej:true,note:lydo});
+  if(st==='done') h.push({a:'Cấp phát',by:'Trần Văn Hùng',t:ngay+' 15:40'});
+  return {so,khoa,ngay,st,nguoi,lines:lines.map(([ma,sl])=>({ma,sl,phat:st==='done'?sl:0})),hist:h,xuat:st==='done'?'CTX-'+so.slice(3):null,alloc:null};
+}
+const ST = {
+  draft:['Nháp','b-draft'], cho_xn:['Chờ kho xác nhận','b-wait'], cho_duyet:['Chờ duyệt','b-wait'],
+  da_duyet:['Đã duyệt','b-ok'], done:['Đã cấp phát','b-done'], bad:['Từ chối','b-bad'],
+};
+const item = ma => ITEMS.find(i=>i.ma===ma);
+const nf = n => Number(n).toLocaleString('vi-VN');
+const money = n => nf(Math.round(n))+' ₫';
+const dfmt = s => { const [y,m,d]=s.slice(0,10).split('-'); return `${d}/${m}/${y}`; };
+const daysLeft = s => Math.round((new Date(s+'T00:00:00')-TODAY)/864e5);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const badge = st => `<span class="badge ${ST[st][1]}">${ST[st][0]}</span>`;
+const stock = ma => S.lots.filter(l=>l.ma===ma&&!l.q).reduce((a,l)=>a+l.sl,0);
+const hsdCls = s => { const d=daysLeft(s); return d<30?'red':d<90?'orange':''; };
+const slip = so => S.slips.find(s=>s.so===so);
+
+function fefo(ma, need){
+  const lots=S.lots.filter(l=>l.ma===ma&&!l.q&&l.sl>0).sort((a,b)=>a.hsd.localeCompare(b.hsd));
+  const out=[]; let rest=need;
+  for(const l of lots){ if(rest<=0)break; const take=Math.min(l.sl,rest); out.push({lo:l.lo,hsd:l.hsd,sl:take}); rest-=take; }
+  return {out,short:rest};
+}
+
+const NAV = [
+  {id:'dashboard',label:'Tổng quan',roles:'dd kho tp kt'},
+  {sec:'Cấp phát'},
+  {id:'lapphieu',label:'Lập phiếu lĩnh',roles:'dd'},
+  {id:'phieulinh',label:'Phiếu lĩnh',roles:'dd kho tp',cnt:()=>countFor()},
+  {id:'capphat',label:'Cấp phát',roles:'kho',cnt:()=>S.slips.filter(s=>s.st==='da_duyet').length},
+  {sec:'Kho'},
+  {id:'nhapkho',label:'Kiểm nhập & nhập kho',roles:'kho kt tp'},
+  {id:'tonkho',label:'Tồn kho theo lô',roles:'kho tp kt dd'},
+  {id:'vattu',label:'Danh mục vật tư',roles:'kho tp kt'},
+  {sec:'Kế hoạch & báo cáo'},
+  {id:'dutru',label:'Dự trù tháng',roles:'kho tp dd'},
+  {id:'baocao',label:'Báo cáo X-N-T',roles:'kho tp kt'},
+];
+const TITLES = {dashboard:'Tổng quan',lapphieu:'Lập phiếu lĩnh',phieulinh:'Phiếu lĩnh',chitiet:'Chi tiết phiếu lĩnh',capphat:'Cấp phát',inchungtu:'Chứng từ xuất kho',nhapkho:'Kiểm nhập & nhập kho',tonkho:'Tồn kho theo lô',vattu:'Danh mục vật tư',dutru:'Dự trù tháng',baocao:'Báo cáo xuất – nhập – tồn'};
+function myQueue(){
+  if(S.role==='kho') return S.slips.filter(s=>s.st==='cho_xn'||s.st==='da_duyet');
+  if(S.role==='tp') return S.slips.filter(s=>s.st==='cho_duyet');
+  if(S.role==='dd') return S.slips.filter(s=>s.khoa==='Khoa Nội'&&s.st!=='done');
+  return [];
+}
+function countFor(){ const n=myQueue().length; return n; }
+function visibleSlips(){ return S.role==='dd'?S.slips.filter(s=>s.khoa==='Khoa Nội'):S.slips; }
+
+function go(r,sel){ S.route=r; if(sel!==undefined)S.sel=sel; try{history.replaceState(null,'','#'+r)}catch(e){} render(); window.scrollTo(0,0); }
+function toast(m){ S.toast=m; render(); clearTimeout(toast.t); toast.t=setTimeout(()=>{S.toast=null;render()},2600); }
+
+/* ---------- screens ---------- */
+function vLogin(){
+  return `<div class="login">
+  <section class="hero">
+    <div style="display:flex;gap:10px;align-items:center"><div class="logo">PN</div><b>Bệnh viện quận Phú Nhuận</b></div>
+    <div style="display:grid;gap:12px">
+      <h1>Kho Vật tư y tế</h1>
+      <p>Nhập kho, bảo quản và cấp phát vật tư tiêu hao y tế theo quy trình QĐ 651/QĐ-BVPN. Phiếu lĩnh, duyệt và xuất kho đều trên một hệ thống.</p>
+    </div>
+    <small style="opacity:.8">Bản prototype phục vụ demo đồ án – dữ liệu mẫu</small>
+  </section>
+  <section class="form">
+    <form id="loginForm">
+      <div><h2 style="font-size:20px">Đăng nhập</h2><p class="muted" style="margin:4px 0 0">Dùng tài khoản do P.VTTBYT cấp</p></div>
+      <div class="field"><label for="u">Tên đăng nhập</label><input class="f" id="u" value="thukho.hung" autocomplete="username"></div>
+      <div class="field"><label for="p">Mật khẩu</label><input class="f" id="p" type="password" value="demo1234" autocomplete="current-password"></div>
+      <button class="btn p" type="submit">Đăng nhập</button>
+      <div class="field"><label>Đăng nhập nhanh (demo) – chọn vai trò</label>
+        <div class="quick">
+          ${Object.entries(ROLES).map(([k,r])=>`<button type="button" class="btn" data-a="login" data-r="${k}">${r.title.split(' – ')[0]}<small>${r.name}</small></button>`).join('')}
+        </div>
+      </div>
+    </form>
+  </section></div>`;
+}
+
+function vDashboard(){
+  const exp=S.lots.filter(l=>!l.q&&daysLeft(l.hsd)<=90).sort((a,b)=>a.hsd.localeCompare(b.hsd));
+  const low=ITEMS.filter(i=>stock(i.ma)<i.min);
+  const q=myQueue();
+  const k = S.role==='dd' ? [
+    ['Phiếu đang xử lý',q.length,'wait','phieulinh'],['Đã cấp phát tháng này',S.slips.filter(s=>s.khoa==='Khoa Nội'&&s.st==='done').length+6,'','phieulinh'],
+    ['Vật tư dưới tồn tối thiểu (kho)',low.length,'warn','tonkho'],['Tủ trực: sắp hết hạn',1,'bad','tonkho']]
+  : [
+    [S.role==='tp'?'Phiếu chờ tôi duyệt':'Phiếu chờ xử lý',q.length,'wait',S.role==='kho'?'phieulinh':'phieulinh'],
+    ['Lô sắp hết hạn (≤ 90 ngày)',exp.length,'bad','tonkho'],
+    ['Dưới tồn tối thiểu',low.length,'warn','vattu'],
+    ['Phiếu cấp phát tháng 9',S.slips.filter(s=>s.st==='done').length+39,'','baocao']];
+  return `${head('Tổng quan',`Xin chào ${ROLES[S.role].name}. Hôm nay ${dfmt('2026-09-24')}.`, S.role==='dd'?`<button class="btn p" data-go="lapphieu">+ Lập phiếu lĩnh</button>`:'')}
+  ${demoHint()}
+  <div class="grid4">${k.map(([l,v,c,r])=>`<button class="kpi ${c}" data-go="${r}"><span>${l}</span><b>${v}</b><small class="muted">Xem chi tiết →</small></button>`).join('')}</div>
+  <div class="cols2">
+    <div class="card"><div class="card-h"><h2>Việc cần làm</h2><button class="btn g sm" data-go="phieulinh">Tất cả phiếu</button></div>
+      ${q.length?`<div class="tw"><table><thead><tr><th>Số phiếu</th><th>Khoa</th><th class="num">Mặt hàng</th><th>Trạng thái</th><th></th></tr></thead><tbody>
+      ${q.map(s=>`<tr><td><b>${s.so}</b><br><small class="muted">${dfmt(s.ngay)}</small></td><td>${s.khoa}</td><td class="num">${s.lines.length}</td><td>${badge(s.st)}</td><td><button class="btn sm" data-a="open" data-so="${s.so}">Mở</button></td></tr>`).join('')}
+      </tbody></table></div>`:`<div class="empty">Không có phiếu nào chờ xử lý</div>`}
+    </div>
+    <div class="card"><div class="card-h"><h2>Sắp hết hạn</h2><span class="muted" style="font-size:12px">Ưu tiên cấp phát trước (FEFO)</span></div>
+      <div class="tw"><table><thead><tr><th>Vật tư</th><th>Lô</th><th>HSD</th><th class="num">Còn</th><th class="num">SL</th></tr></thead><tbody>
+      ${exp.map(l=>`<tr><td>${item(l.ma).ten}</td><td>${l.lo}</td><td class="${hsdCls(l.hsd)}">${dfmt(l.hsd)}</td><td class="num ${hsdCls(l.hsd)}">${daysLeft(l.hsd)} ngày</td><td class="num">${nf(l.sl)}</td></tr>`).join('')}
+      </tbody></table></div>
+    </div>
+  </div>`;
+}
+function demoHint(){
+  const next = (()=>{
+    const s12=slip('PL-2026-0012');
+    if(S.role==='kho'&&s12&&s12.st==='cho_xn') return 'Mở phiếu <b>PL-2026-0012</b> và bấm <b>Xác nhận</b>, sau đó đổi vai trò sang Trưởng P.VTTBYT.';
+    if(S.role==='tp'&&S.slips.some(s=>s.st==='cho_duyet')) return 'Mở phiếu đang <b>Chờ duyệt</b> và bấm <b>Duyệt</b> (hoặc thử Từ chối), sau đó đổi vai trò về Thủ kho.';
+    if(S.role==='kho'&&S.slips.some(s=>s.st==='da_duyet')) return 'Vào <b>Cấp phát</b>: hệ thống tự chọn lô theo FEFO, xác nhận rồi xem chứng từ xuất.';
+    if(S.role==='dd') return 'Bấm <b>Lập phiếu lĩnh</b>, thêm vật tư và <b>Gửi duyệt</b>, sau đó đổi vai trò sang Thủ kho.';
+    return 'Dùng ô <b>Vai trò</b> ở góc trái dưới để đi hết luồng: ĐD khoa → Thủ kho → Trưởng P.VTTBYT → Thủ kho.';
+  })();
+  return `<div class="demo"><b>Kịch bản demo</b><span>${next}</span></div>`;
+}
+function head(t,sub,act=''){ return `<div class="pagehead"><div><h1>${t}</h1>${sub?`<p>${sub}</p>`:''}</div><div class="actions">${act}</div></div>`; }
+
+function vVattu(){
+  const q=S.vtq.toLowerCase();
+  const rows=ITEMS.filter(i=>(!q||(i.ma+i.ten).toLowerCase().includes(q))&&(!S.vtNhom||i.nhom===S.vtNhom));
+  const nhoms=[...new Set(ITEMS.map(i=>i.nhom))];
+  return `${head('Danh mục vật tư','Vật tư tiêu hao y tế và hóa chất đang quản lý tại kho P.VTTBYT',`<button class="btn p" data-a="drawerNew">+ Thêm vật tư</button>`)}
+  <div class="card">
+    <div class="card-h" style="justify-content:flex-start">
+      <input class="f" id="vtq" placeholder="Tìm theo mã hoặc tên…" value="${esc(S.vtq)}" style="max-width:280px">
+      <select class="f" id="vtNhom" style="max-width:200px"><option value="">Tất cả nhóm</option>${nhoms.map(n=>`<option ${n===S.vtNhom?'selected':''}>${n}</option>`).join('')}</select>
+    </div>
+    <div class="tw"><table><thead><tr><th>Mã</th><th>Tên VTTHYT</th><th>ĐVT</th><th>Số ĐK</th><th>Nhóm</th><th>Bảo quản</th><th class="num">Đơn giá</th><th class="num">Tồn</th><th class="num">Tối thiểu</th><th></th></tr></thead><tbody>
+    ${rows.map(i=>{const t=stock(i.ma);return `<tr><td>${i.ma}</td><td><b>${i.ten}</b></td><td>${i.dvt}</td><td class="muted">${i.sodk}</td><td>${i.nhom}</td><td>${bq(i.bq)}</td><td class="num">${money(i.gia)}</td><td class="num ${t<i.min?'orange':''}">${nf(t)}</td><td class="num muted">${nf(i.min)}</td><td><button class="btn sm" data-a="drawerEdit" data-ma="${i.ma}">Sửa</button></td></tr>`}).join('')||`<tr><td colspan="10" class="empty">Không tìm thấy vật tư phù hợp</td></tr>`}
+    </tbody></table></div>
+  </div>`;
+}
+const bq = b => `<span class="chip ${b==='Lạnh'?'lanh':b==='Mát'?'mat':''}">${b==='Phòng'?'Phòng 15–25°C':b==='Mát'?'Mát 8–15°C':'Lạnh 2–8°C'}</span>`;
+
+function vTonkho(){
+  const tu = S.khoFilter!=='Kho chính';
+  return `${head('Tồn kho theo lô','Hạn dùng dưới 30 ngày tô đỏ, dưới 90 ngày tô cam. Lô biệt trữ không được cấp phát.')}
+  <div class="card">
+    <div class="card-h" style="justify-content:flex-start"><select class="f" id="khoFilter" style="max-width:240px">${['Kho chính','Tủ trực Khoa Nội'].map(k=>`<option ${k===S.khoFilter?'selected':''}>${k}</option>`).join('')}</select>
+    <span class="muted" style="font-size:12px">Kiểm kê gần nhất: 31/08/2026</span></div>
+    <div class="tw"><table><thead><tr><th>Vật tư / Số lô</th><th>Vị trí</th><th>HSD</th><th class="num">Còn</th><th class="num">SL tồn</th><th>Trạng thái</th></tr></thead><tbody>
+    ${tu ? tuTruc() : ITEMS.map(i=>{
+      const ls=S.lots.filter(l=>l.ma===i.ma).sort((a,b)=>a.hsd.localeCompare(b.hsd));
+      return `<tr><td colspan="4"><b>${i.ten}</b> <span class="muted">· ${i.ma} · ${i.dvt}</span></td><td class="num"><b>${nf(stock(i.ma))}</b></td><td>${stock(i.ma)<i.min?'<span class="badge b-warn">Dưới tối thiểu</span>':''}</td></tr>`+
+      ls.map(l=>`<tr class="sub"><td>Lô ${l.lo}</td><td>${l.vt}</td><td class="${hsdCls(l.hsd)}">${dfmt(l.hsd)}</td><td class="num ${hsdCls(l.hsd)}">${daysLeft(l.hsd)} ngày</td><td class="num">${nf(l.sl)}</td><td>${l.q?'<span class="badge b-bad">Biệt trữ</span>':''}</td></tr>`).join('');
+    }).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+function tuTruc(){
+  const r=[['VT001','BT2402','2026-11-20',120],['VT002','GT2310','2026-10-12',3],['VT005','DT2406','2027-06-30',40],['VT006','QT2403','2026-10-08',1]];
+  return r.map(([ma,lo,h,sl])=>`<tr><td><b>${item(ma).ten}</b> <span class="muted">· Lô ${lo}</span></td><td>Tủ trực</td><td class="${hsdCls(h)}">${dfmt(h)}</td><td class="num ${hsdCls(h)}">${daysLeft(h)} ngày</td><td class="num">${sl}</td><td></td></tr>`).join('');
+}
+
+function vLapphieu(){
+  if(!S.draft) S.draft={lines:[{ma:'VT001',sl:200},{ma:'VT002',sl:6},{ma:'',sl:''}],lydo:'Bổ sung tủ trực tháng 10'};
+  const d=S.draft;
+  return `${head('Lập phiếu lĩnh','Phiếu lĩnh vật dụng y tế tiêu hao – theo mẫu QĐ 651')}
+  <div class="stepbar"><span class="on">1. Lập phiếu</span>›<span>2. Trưởng khoa duyệt</span>›<span>3. Kho xác nhận</span>›<span>4. Trưởng P.VTTBYT duyệt</span>›<span>5. Cấp phát</span></div>
+  <div class="card"><div class="card-b" style="display:grid;gap:12px">
+    <div class="grid4">
+      <div class="field"><label>Khoa/Phòng</label><input class="f" value="Khoa Nội" disabled></div>
+      <div class="field"><label>Kho lĩnh</label><input class="f" value="Kho chính – P.VTTBYT" disabled></div>
+      <div class="field"><label>Ngày lập</label><input class="f" value="24/09/2026" disabled></div>
+      <div class="field"><label for="lydo">Lý do / Y lệnh</label><input class="f" id="lydo" value="${esc(d.lydo)}"></div>
+    </div>
+  </div>
+  <div class="tw"><table><thead><tr><th>STT</th><th>Tên VTTHYT</th><th>Mã</th><th>ĐVT</th><th class="num">Tồn khả dụng</th><th class="num">SL yêu cầu</th><th></th></tr></thead><tbody>
+  ${d.lines.map((l,i)=>{const it=item(l.ma);const t=it?stock(l.ma):0;const over=it&&+l.sl>t;
+    return `<tr><td>${i+1}</td><td><select class="f" data-line="${i}" data-k="ma" style="min-width:200px"><option value="">– Chọn vật tư –</option>${ITEMS.map(x=>`<option value="${x.ma}" ${x.ma===l.ma?'selected':''}>${x.ten}</option>`).join('')}</select>${over?`<div class="orange" style="font-size:12px;margin-top:4px">Vượt tồn khả dụng – kho sẽ báo lại khoa</div>`:''}</td>
+    <td class="muted">${it?it.ma:'—'}</td><td>${it?it.dvt:''}</td><td class="num muted">${it?nf(t):''}</td>
+    <td class="num"><input class="f qty" type="number" min="1" data-line="${i}" data-k="sl" value="${l.sl}"></td>
+    <td><button class="btn g sm" data-a="delLine" data-i="${i}" aria-label="Xóa dòng">Xóa</button></td></tr>`}).join('')}
+  </tbody></table></div>
+  <div class="card-h" style="border-top:1px solid var(--border);border-bottom:0"><button class="btn" data-a="addLine">+ Thêm dòng</button>
+    <div class="actions"><button class="btn" data-a="saveDraft">Lưu nháp</button><button class="btn p" data-a="submitSlip">Gửi duyệt</button></div></div>
+  </div>`;
+}
+
+function vPhieulinh(){
+  const all=visibleSlips();
+  const tabs=[['all','Tất cả'],['cho_xn','Chờ kho xác nhận'],['cho_duyet','Chờ duyệt'],['da_duyet','Đã duyệt'],['done','Đã cấp phát'],['bad','Từ chối']];
+  const rows=S.tab==='all'?all:all.filter(s=>s.st===S.tab);
+  return `${head('Phiếu lĩnh',S.role==='dd'?'Các phiếu của Khoa Nội':'Phiếu lĩnh từ tất cả khoa/phòng',S.role==='dd'?`<button class="btn p" data-go="lapphieu">+ Lập phiếu lĩnh</button>`:'')}
+  <div class="card">
+    <div class="tabs">${tabs.map(([k,l])=>`<button class="${S.tab===k?'on':''}" data-a="tab" data-t="${k}">${l}<em>${k==='all'?all.length:all.filter(s=>s.st===k).length}</em></button>`).join('')}</div>
+    <div class="tw"><table><thead><tr><th>Số phiếu</th><th>Ngày</th><th>Khoa</th><th class="num">Mặt hàng</th><th>Người lập</th><th>Trạng thái</th><th></th></tr></thead><tbody>
+    ${rows.slice().reverse().map(s=>`<tr><td><b>${s.so}</b></td><td>${dfmt(s.ngay)}</td><td>${s.khoa}</td><td class="num">${s.lines.length}</td><td>${s.nguoi}</td><td>${badge(s.st)}</td><td><button class="btn sm" data-a="open" data-so="${s.so}">Xem</button></td></tr>`).join('')||`<tr><td colspan="7" class="empty">Không có phiếu ở trạng thái này</td></tr>`}
+    </tbody></table></div>
+  </div>`;
+}
+
+function vChitiet(){
+  const s=slip(S.sel); if(!s) return vPhieulinh();
+  const steps=['Lập phiếu','Trưởng khoa duyệt','Kho xác nhận','Trưởng P.VTTBYT duyệt','Cấp phát'];
+  const tl=steps.map((a,i)=>{const h=s.hist[i];
+    if(h&&h.rej) return `<li class="rej"><span class="dot">✕</span><div><b>Từ chối</b><small>${h.by} · ${h.t.slice(11)} ${dfmt(h.t)}</small>${h.note?`<div class="alert bad" style="margin-top:6px">${esc(h.note)}</div>`:''}</div></li>`;
+    if(h) return `<li class="done"><span class="dot">✓</span><div><b>${a}</b><small>${h.by} · ${h.t.slice(11)} ${dfmt(h.t)}</small></div></li>`;
+    if(s.st==='bad') return '';
+    const cur=i===s.hist.length; return `<li class="${cur?'cur':''}"><span class="dot">${i+1}</span><div><b>${a}</b><small>${cur?'Đang chờ':'Chưa đến bước'}</small></div></li>`;
+  }).join('');
+  let act='';
+  if(S.role==='kho'&&s.st==='cho_xn') act=`<button class="btn" data-a="return" data-so="${s.so}">Trả lại khoa sửa</button><button class="btn p" data-a="confirm" data-so="${s.so}">Xác nhận</button>`;
+  if(S.role==='tp'&&s.st==='cho_duyet') act=`<button class="btn d" data-a="rejectOpen" data-so="${s.so}">Từ chối</button><button class="btn p" data-a="approve" data-so="${s.so}">Duyệt</button>`;
+  if(S.role==='kho'&&s.st==='da_duyet') act=`<button class="btn p" data-a="toAlloc" data-so="${s.so}">Cấp phát</button>`;
+  if(s.st==='done') act=`<button class="btn" data-a="print" data-so="${s.so}">Xem chứng từ xuất</button>`;
+  const shortage=s.lines.filter(l=>l.sl>stock(l.ma));
+  return `${head(s.so, `${s.khoa} · lập ngày ${dfmt(s.ngay)} bởi ${s.nguoi}`, `<button class="btn g" data-go="phieulinh">← Danh sách</button>`)}
+  <div class="grid2">
+    <div class="card">
+      <div class="card-h"><h2>Thông tin phiếu</h2>${badge(s.st)}</div>
+      <div class="card-b meta"><div><span>Khoa/Phòng</span><b>${s.khoa}</b></div><div><span>Kho lĩnh</span><b>Kho chính</b></div><div><span>Ngày lập</span><b>${dfmt(s.ngay)}</b></div><div><span>Chứng từ xuất</span><b>${s.xuat||'—'}</b></div></div>
+      ${shortage.length&&['cho_xn','cho_duyet'].includes(s.st)?`<div class="card-b" style="padding-top:0"><div class="alert warn">Tồn kho không đủ cho: ${shortage.map(l=>item(l.ma).ten).join(', ')}. Kho sẽ báo khoa số lượng có thể cấp.</div></div>`:''}
+      <div class="tw"><table><thead><tr><th>STT</th><th>Mã</th><th>Tên VTTHYT</th><th>ĐVT</th><th class="num">SL yêu cầu</th><th class="num">Tồn kho</th><th class="num">SL phát</th></tr></thead><tbody>
+      ${s.lines.map((l,i)=>`<tr><td>${i+1}</td><td>${l.ma}</td><td>${item(l.ma).ten}</td><td>${item(l.ma).dvt}</td><td class="num">${nf(l.sl)}</td><td class="num ${l.sl>stock(l.ma)?'red':'muted'}">${nf(stock(l.ma))}</td><td class="num">${l.phat?nf(l.phat):'—'}</td></tr>`).join('')}
+      </tbody></table></div>
+      ${act?`<div class="card-h" style="border-top:1px solid var(--border);border-bottom:0;justify-content:flex-end"><div class="actions">${act}</div></div>`:''}
+    </div>
+    <div class="card"><div class="card-h"><h2>Tiến trình duyệt</h2></div><div class="card-b"><ol class="timeline">${tl}</ol></div></div>
+  </div>`;
+}
+
+function vCapphat(){
+  const list=S.slips.filter(s=>s.st==='da_duyet');
+  const s=slip(S.sel)&&slip(S.sel).st==='da_duyet'?slip(S.sel):list[0];
+  if(!s) return `${head('Cấp phát','Phiếu đã được Trưởng P.VTTBYT duyệt, chờ xuất kho')}<div class="card"><div class="empty">Chưa có phiếu nào đã duyệt chờ cấp phát.<br><button class="btn g" data-go="phieulinh">Xem danh sách phiếu lĩnh</button></div></div>`;
+  if(!s.alloc) s.alloc=s.lines.map(l=>fefo(l.ma,l.sl));
+  return `${head('Cấp phát – '+s.so, `${s.khoa} · hệ thống gợi ý lô theo nguyên tắc hết hạn trước xuất trước (FEFO)`)}
+  ${list.length>1?`<div class="actions">${list.map(x=>`<button class="btn sm ${x.so===s.so?'p':''}" data-a="pickAlloc" data-so="${x.so}">${x.so}</button>`).join('')}</div>`:''}
+  <div class="card">
+    <div class="tw"><table><thead><tr><th>Vật tư</th><th class="num">SL duyệt</th><th>Lô xuất</th><th>HSD</th><th class="num">SL phát</th><th></th></tr></thead><tbody>
+    ${s.lines.map((l,i)=>{const a=s.alloc[i];const it=item(l.ma);
+      const lotRows=a.out.map((o,j)=>`<tr class="${j?'sub':''}">${j?'<td></td><td></td>':`<td rowspan="1"><b>${it.ten}</b><br><small class="muted">${it.ma} · ${it.dvt}</small></td><td class="num">${nf(l.sl)}</td>`}<td>Lô ${o.lo} ${j===0?'<span class="chip fefo">FEFO</span>':''}</td><td class="${hsdCls(o.hsd)}">${dfmt(o.hsd)}</td><td class="num">${nf(o.sl)}</td><td></td></tr>`).join('');
+      return lotRows+(a.short>0?`<tr class="sub"><td></td><td></td><td colspan="4"><span class="red">Thiếu ${nf(a.short)} ${it.dvt}</span> – cấp theo số hiện có, báo khoa phần còn lại</td></tr>`:'')}).join('')}
+    </tbody></table></div>
+    <div class="card-h" style="border-top:1px solid var(--border);border-bottom:0"><span class="muted" style="font-size:13px">Xác nhận sẽ trừ tồn từng lô và tạo chứng từ xuất kho.</span><button class="btn p" data-a="doAlloc" data-so="${s.so}">Xác nhận cấp phát</button></div>
+  </div>`;
+}
+
+function vIn(){
+  const s=slip(S.sel); if(!s||s.st!=='done') return vPhieulinh();
+  const rows=[]; (s.alloc||s.lines.map(l=>fefo(l.ma,l.sl))).forEach((a,i)=>{const it=item(s.lines[i].ma); a.out.forEach(o=>rows.push({it,o}));});
+  const total=rows.reduce((t,r)=>t+r.o.sl*r.it.gia,0);
+  return `${head('Chứng từ xuất kho','Bản xem trước khổ A4. Trong ứng dụng thật, nút In sẽ mở hộp thoại in của trình duyệt.',`<button class="btn g" data-a="open" data-so="${s.so}">← Về phiếu</button>`)}
+  <div class="tw"><div class="paper">
+    <div class="hd"><div><b>Sở Y tế TP. Hồ Chí Minh</b><br>Bệnh viện quận Phú Nhuận<br>Phòng Vật tư – TBYT</div><div style="text-align:right">Mẫu: Chứng từ xuất kho<br>Số: ${s.xuat}</div></div>
+    <h2>Chứng từ xuất kho</h2>
+    <p class="c">Ngày 24 tháng 09 năm 2026</p>
+    <p>Hình thức xuất: Cấp phát theo phiếu lĩnh ${s.so}<br>Kho xuất: Kho chính – P.VTTBYT &nbsp;·&nbsp; Phòng nhận: ${s.khoa}</p>
+    <table><thead><tr><th>STT</th><th>Mã hàng</th><th>Tên hàng / Số lô</th><th>ĐVT</th><th class="num">SL</th><th class="num">Đơn giá</th><th class="num">Thành tiền</th></tr></thead><tbody>
+    ${rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.it.ma}</td><td>${r.it.ten}<br><small>Lô ${r.o.lo} – HSD ${dfmt(r.o.hsd)}</small></td><td>${r.it.dvt}</td><td class="num">${nf(r.o.sl)}</td><td class="num">${nf(r.it.gia)}</td><td class="num">${nf(r.o.sl*r.it.gia)}</td></tr>`).join('')}
+    <tr><td colspan="6" style="text-align:right"><b>Tổng cộng</b></td><td class="num"><b>${nf(total)}</b></td></tr>
+    </tbody></table>
+    <div class="sign"><div><b>Người phát</b><i>(Ký, ghi rõ họ tên)</i>Trần Văn Hùng</div><div><b>Người lĩnh</b><i>(Ký, ghi rõ họ tên)</i>${s.nguoi}</div><div><b>P.VTTBYT</b><i>(Ký, ghi rõ họ tên)</i>Lê Thị Kim Hạnh</div></div>
+  </div></div>`;
+}
+
+function vNhapkho(){
+  if(!S.nhap) S.nhap={ncc:'Công ty TNHH TBYT Minh Phát',hd:'HĐ 15/2026/BVPN – Gói thầu VTTH',hdon:'0004521',done:false,lines:[
+    {ma:'VT002',lo:'GT2408',hsd:'2027-08-20',sl:50,gia:68000,ok:true},
+    {ma:'VT006',lo:'QT2407',hsd:'2027-07-10',sl:20,gia:225000,ok:true},
+    {ma:'VT004',lo:'KL2406',hsd:'2027-06-01',sl:300,gia:9800,ok:true},
+    {ma:'VT003',lo:'BG2405',hsd:'2027-05-15',sl:10,gia:145000,ok:false},
+  ]};
+  const n=S.nhap; const lech=n.lines.filter(l=>l.gia!==item(l.ma).gia);
+  const total=n.lines.filter(l=>l.ok).reduce((t,l)=>t+l.sl*l.gia,0);
+  return `${head('Kiểm nhập & nhập kho','Hội đồng kiểm nhập đối chiếu tên, số ĐK, số lô, hạn dùng, số lượng và giá theo hợp đồng')}
+  <div class="stepbar"><span class="on">Kiểm nhập</span>›<span class="${n.done?'on':''}">Kế toán kiểm hóa đơn, in phiếu nhập</span>›<span>Trưởng P.TCKT xác nhận</span>›<span>Trưởng P.VTTBYT ký</span>›<span>Đề nghị thanh toán</span></div>
+  <div class="card">
+    <div class="card-b grid4">
+      <div class="field"><label>Nhà cung cấp</label><input class="f" value="${n.ncc}" disabled></div>
+      <div class="field"><label>Hợp đồng / Gói thầu</label><input class="f" value="${n.hd}" disabled></div>
+      <div class="field"><label>Số hóa đơn</label><input class="f" value="${n.hdon}" disabled></div>
+      <div class="field"><label>Ngày nhận hàng</label><input class="f" value="24/09/2026" disabled></div>
+    </div>
+    ${lech.length?`<div class="card-b" style="padding-top:0"><div class="alert bad">${lech.length} dòng có đơn giá khác giá hợp đồng. Sửa lại theo hóa đơn đúng hoặc đánh dấu Không đạt trước khi chuyển kế toán.</div></div>`:''}
+    <div class="tw"><table><thead><tr><th>Vật tư</th><th>Số lô</th><th>HSD</th><th class="num">SL</th><th class="num">Đơn giá HĐ</th><th class="num">Đơn giá hóa đơn</th><th>Kết quả</th></tr></thead><tbody>
+    ${n.lines.map((l,i)=>{const it=item(l.ma);const bad=l.gia!==it.gia;return `<tr><td><b>${it.ten}</b><br><small class="muted">${it.sodk} · ${bq(it.bq)}</small></td><td>${l.lo}</td><td>${dfmt(l.hsd)}</td><td class="num">${nf(l.sl)}</td><td class="num muted">${nf(it.gia)}</td>
+    <td class="num"><input class="f qty ${bad?'bad':''}" style="width:120px" type="number" data-nl="${i}" value="${l.gia}" title="${bad?'Lệch giá hợp đồng':''}" ${n.done?'disabled':''}></td>
+    <td><button class="btn sm" data-a="toggleOk" data-i="${i}" ${n.done?'disabled':''}>${l.ok?'<span class="badge b-done">Đạt</span>':'<span class="badge b-bad">Không đạt · Biệt trữ</span>'}</button></td></tr>`}).join('')}
+    </tbody><tfoot><tr><td colspan="5">Giá trị nhập (dòng Đạt)</td><td class="num">${money(total)}</td><td></td></tr></tfoot></table></div>
+    <div class="card-h" style="border-top:1px solid var(--border);border-bottom:0">
+      <span class="muted" style="font-size:13px">${n.done?'Đã nhập kho. Phiếu nhập PNK-2026-0087 đang chờ Trưởng P.TCKT xác nhận.':'Bấm vào cột Kết quả để đổi Đạt / Không đạt.'}</span>
+      <div class="actions">${n.done?`<button class="btn" data-go="tonkho">Xem tồn kho</button><button class="btn" data-a="resetNhap">Tạo phiếu kiểm nhập mới</button>`:`<button class="btn">Lưu sổ kiểm nhập</button><button class="btn p" data-a="doNhap" ${lech.some(l=>l.ok)?'disabled':''}>Nhập kho & chuyển kế toán</button>`}</div>
+    </div>
+  </div>`;
+}
+
+function xnt(){
+  return ITEMS.map(i=>{
+    const cuoi=S.lots.filter(l=>l.ma===i.ma&&!l.q).reduce((a,l)=>a+l.sl,0);
+    const n=i.bn+S.moves.filter(m=>m.ma===i.ma&&m.type==='N').reduce((a,m)=>a+m.sl,0);
+    const x=i.bx+S.moves.filter(m=>m.ma===i.ma&&m.type==='X').reduce((a,m)=>a+m.sl,0);
+    return {i,dau:cuoi-n+x,n,x,cuoi};
+  });
+}
+function vBaocao(){
+  const r=xnt(); const tv=r.reduce((t,x)=>t+x.cuoi*x.i.gia,0);
+  return `${head('Báo cáo xuất – nhập – tồn','Kho chính · tháng 09/2026 · số liệu cập nhật theo chứng từ đã duyệt',`<button class="btn" data-a="excel">Xuất Excel</button>`)}
+  <div class="card">
+    <div class="card-h" style="justify-content:flex-start"><select class="f" style="max-width:160px"><option>Tháng 09/2026</option><option>Tháng 08/2026</option></select><select class="f" style="max-width:200px"><option>Kho chính</option></select></div>
+    <div class="tw"><table><thead><tr><th>Mã</th><th>Tên VTTHYT</th><th>ĐVT</th><th class="num">Tồn đầu</th><th class="num">Nhập</th><th class="num">Xuất</th><th class="num">Tồn cuối</th><th class="num">Giá trị tồn</th></tr></thead><tbody>
+    ${r.map(x=>`<tr><td>${x.i.ma}</td><td>${x.i.ten}</td><td>${x.i.dvt}</td><td class="num">${nf(x.dau)}</td><td class="num">${nf(x.n)}</td><td class="num">${nf(x.x)}</td><td class="num"><b>${nf(x.cuoi)}</b></td><td class="num">${money(x.cuoi*x.i.gia)}</td></tr>`).join('')}
+    </tbody><tfoot><tr><td colspan="7">Tổng giá trị tồn kho</td><td class="num">${money(tv)}</td></tr></tfoot></table></div>
+  </div>`;
+}
+
+function vDutru(){
+  const r=xnt();
+  if(!S.dutru) S.dutru={};
+  return `${head('Dự trù tháng 10/2026','Lập từ ngày 1–5 hằng tháng. SL gợi ý = trung bình xuất 3 tháng × 1,2 − tồn cuối.',`<button class="btn p" data-a="sendDutru">Gửi duyệt</button>`)}
+  <div class="alert info">Hôm nay 24/09 nằm ngoài kỳ dự trù định kỳ. Dự trù gửi lúc này sẽ được ghi nhận là <b>dự trù đột xuất/bổ sung</b>.</div>
+  <div class="card"><div class="tw"><table><thead><tr><th>Tên VTTHYT</th><th>ĐVT</th><th class="num">Tồn đầu</th><th class="num">Nhập</th><th class="num">Xuất</th><th class="num">Tồn cuối</th><th class="num">TB xuất 3 th</th><th class="num">SL gợi ý</th><th class="num">SL dự trù</th><th>HSD gần nhất</th></tr></thead><tbody>
+  ${r.map(x=>{const g=Math.max(0,Math.round(x.i.avg*1.2-x.cuoi));const v=S.dutru[x.i.ma]??g;const near=S.lots.filter(l=>l.ma===x.i.ma&&!l.q).sort((a,b)=>a.hsd.localeCompare(b.hsd))[0];
+    return `<tr><td><b>${x.i.ten}</b></td><td>${x.i.dvt}</td><td class="num">${nf(x.dau)}</td><td class="num">${nf(x.n)}</td><td class="num">${nf(x.x)}</td><td class="num">${nf(x.cuoi)}</td><td class="num muted">${nf(x.i.avg)}</td><td class="num" style="background:var(--primary-soft);color:var(--primary-strong);font-weight:600">${nf(g)}</td><td class="num"><input class="f qty" type="number" min="0" data-dt="${x.i.ma}" value="${v}"></td><td class="${near?hsdCls(near.hsd):''}">${near?dfmt(near.hsd):'—'}</td></tr>`}).join('')}
+  </tbody></table></div></div>`;
+}
+
+/* ---------- shell ---------- */
+function shell(body){
+  const r=ROLES[S.role];
+  const nav=NAV.filter(n=>n.sec||n.roles.split(' ').includes(S.role));
+  const cleaned=nav.filter((n,i)=>!(n.sec&&(!nav[i+1]||nav[i+1].sec)));
+  const active=S.route==='chitiet'?'phieulinh':S.route==='inchungtu'?'phieulinh':S.route;
+  const q=myQueue().length;
+  return `<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="logo">PN</div><div><b>Kho Vật tư y tế</b><small>BV quận Phú Nhuận</small></div></div>
+    <nav class="nav">${cleaned.map(n=>n.sec?`<div class="sec">${n.sec}</div>`:`<a href="#${n.id}" class="${active===n.id?'on':''}" data-go="${n.id}"><span>${n.label}</span>${n.cnt&&n.cnt()?`<span class="cnt">${n.cnt()}</span>`:''}</a>`).join('')}</nav>
+    <div class="me">
+      <label for="roleSel">Vai trò (đổi để demo luồng duyệt)</label>
+      <select class="f" id="roleSel">${Object.entries(ROLES).map(([k,x])=>`<option value="${k}" ${k===S.role?'selected':''}>${x.title}</option>`).join('')}</select>
+      <button class="btn sm" data-a="logout">Đăng xuất</button>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="top">
+      <div class="crumb">Trang chủ / <b>${TITLES[S.route]||''}</b></div>
+      <input class="search" placeholder="Tìm phiếu, vật tư…" aria-label="Tìm kiếm">
+      <button class="bell" data-go="dashboard" aria-label="Thông báo">🔔${q?`<i>${q}</i>`:''}</button>
+      <div class="avatar" title="${r.name}">${r.short}</div>
+    </header>
+    <main class="content">${body}</main>
+  </div></div>`;
+}
+const VIEWS={dashboard:vDashboard,vattu:vVattu,tonkho:vTonkho,lapphieu:vLapphieu,phieulinh:vPhieulinh,chitiet:vChitiet,capphat:vCapphat,inchungtu:vIn,nhapkho:vNhapkho,baocao:vBaocao,dutru:vDutru};
+
+function overlays(){
+  let h='';
+  if(S.modal){ const m=S.modal;
+    h+=`<div class="ov" data-a="closeOv"><div class="modal" role="dialog" aria-modal="true" onclick="event.stopPropagation()">
+      <h2>Từ chối phiếu ${m.so}</h2><p class="muted" style="margin:0">Lý do sẽ được gửi về khoa lập phiếu.</p>
+      <div class="field"><label for="rejReason">Lý do từ chối (bắt buộc)</label><textarea class="f" id="rejReason" rows="3">${esc(m.reason||'')}</textarea></div>
+      ${m.err?`<div class="alert bad">Vui lòng nhập lý do trước khi từ chối.</div>`:''}
+      <div class="actions" style="justify-content:flex-end"><button class="btn" data-a="closeOv">Hủy</button><button class="btn d" data-a="rejectDo">Từ chối phiếu</button></div>
+    </div></div>`; }
+  if(S.drawer){ const it=S.drawer.ma?item(S.drawer.ma):{ma:'VT008',ten:'',dvt:'Cái',nhom:'Tiêm truyền',bq:'Phòng',sodk:'',gia:0,min:0};
+    h+=`<div class="ov" data-a="closeOv"></div><aside class="drawer" role="dialog" aria-modal="true">
+      <h2>${S.drawer.ma?'Sửa vật tư':'Thêm vật tư'}</h2>
+      <div class="field"><label for="d1">Mã</label><input class="f" id="d1" value="${it.ma}"></div>
+      <div class="field"><label for="d2">Tên VTTHYT</label><input class="f" id="d2" value="${esc(it.ten)}" placeholder="VD: Gạc phẫu thuật 10x10cm"></div>
+      <div class="cols2"><div class="field"><label for="d3">ĐVT</label><input class="f" id="d3" value="${it.dvt}"></div><div class="field"><label for="d4">Số đăng ký</label><input class="f" id="d4" value="${it.sodk}"></div></div>
+      <div class="cols2"><div class="field"><label for="d5">Nhóm</label><select class="f" id="d5">${[...new Set(ITEMS.map(i=>i.nhom))].map(n=>`<option ${n===it.nhom?'selected':''}>${n}</option>`).join('')}</select></div>
+      <div class="field"><label for="d6">Điều kiện bảo quản</label><select class="f" id="d6">${['Phòng','Mát','Lạnh'].map(n=>`<option ${n===it.bq?'selected':''}>${n}</option>`).join('')}</select></div></div>
+      <div class="cols2"><div class="field"><label for="d7">Đơn giá trúng thầu</label><input class="f" id="d7" type="number" value="${it.gia}"></div><div class="field"><label for="d8">Tồn tối thiểu</label><input class="f" id="d8" type="number" value="${it.min}"></div></div>
+      <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="d9" checked> Được BHYT thanh toán</label>
+      <div class="actions" style="justify-content:flex-end"><button class="btn" data-a="closeOv">Hủy</button><button class="btn p" data-a="saveItem">Lưu</button></div>
+    </aside>`; }
+  if(S.toast) h+=`<div class="toast" role="status">${S.toast}</div>`;
+  return h;
+}
+
+function render(){
+  const root=document.getElementById('root');
+  const f=document.activeElement&&document.activeElement.id; const pos=f&&document.activeElement.selectionStart;
+  root.innerHTML=(S.role?shell((VIEWS[S.route]||vDashboard)()):vLogin())+overlays();
+  if(f){const el=document.getElementById(f); if(el){el.focus(); try{if(pos!=null)el.setSelectionRange(pos,pos)}catch(e){}}}
+}
+
+/* ---------- actions ---------- */
+function now(){ return '2026-09-24 '+new Date().toTimeString().slice(0,5); }
+const A={
+  login:e=>{S.role=e.dataset.r;go('dashboard');},
+  logout:()=>{S.role=null;render();},
+  open:e=>go('chitiet',e.dataset.so),
+  tab:e=>{S.tab=e.dataset.t;render();},
+  addLine:()=>{S.draft.lines.push({ma:'',sl:''});render();},
+  delLine:e=>{S.draft.lines.splice(+e.dataset.i,1);if(!S.draft.lines.length)S.draft.lines.push({ma:'',sl:''});render();},
+  saveDraft:()=>toast('Đã lưu nháp phiếu lĩnh'),
+  submitSlip:()=>{
+    const lines=S.draft.lines.filter(l=>l.ma&&+l.sl>0).map(l=>({ma:l.ma,sl:+l.sl,phat:0}));
+    if(!lines.length) return toast('Thêm ít nhất một vật tư có số lượng');
+    const so='PL-2026-'+String(++S.seq).padStart(4,'0');
+    S.slips.push({so,khoa:'Khoa Nội',ngay:'2026-09-24',st:'cho_xn',nguoi:ROLES.dd.name,lines,alloc:null,xuat:null,
+      hist:[{a:'Lập phiếu',by:ROLES.dd.name,t:now()},{a:'Trưởng khoa duyệt',by:'BS. Trần Quốc Bảo (Trưởng khoa Nội)',t:now()}]});
+    S.draft=null; toast(`Đã gửi ${so}. Trưởng khoa đã duyệt, phiếu chuyển đến kho.`); go('chitiet',so);
+  },
+  confirm:e=>{const s=slip(e.dataset.so);s.st='cho_duyet';s.hist.push({a:'Kho xác nhận',by:ROLES.kho.name,t:now()});toast('Đã xác nhận, chuyển Trưởng P.VTTBYT duyệt');render();},
+  return:e=>{toast('Đã trả phiếu về khoa để chỉnh sửa (demo)');},
+  approve:e=>{const s=slip(e.dataset.so);s.st='da_duyet';s.hist.push({a:'Trưởng P.VTTBYT duyệt',by:ROLES.tp.name,t:now()});toast('Đã duyệt phiếu. Kho có thể cấp phát.');render();},
+  rejectOpen:e=>{S.modal={so:e.dataset.so,reason:''};render();setTimeout(()=>{const t=document.getElementById('rejReason');t&&t.focus()});},
+  rejectDo:()=>{const m=S.modal;m.reason=document.getElementById('rejReason').value.trim();if(!m.reason){m.err=true;return render();}
+    const s=slip(m.so);s.st='bad';s.hist.push({a:'Từ chối',by:ROLES.tp.name,t:now(),rej:true,note:m.reason});S.modal=null;toast('Đã từ chối phiếu '+s.so);render();},
+  closeOv:()=>{S.modal=null;S.drawer=null;render();},
+  toAlloc:e=>go('capphat',e.dataset.so),
+  pickAlloc:e=>{S.sel=e.dataset.so;render();},
+  doAlloc:e=>{const s=slip(e.dataset.so);
+    s.alloc=s.lines.map(l=>fefo(l.ma,l.sl));
+    s.alloc.forEach((a,i)=>{a.out.forEach(o=>{const lot=S.lots.find(x=>x.ma===s.lines[i].ma&&x.lo===o.lo);lot.sl-=o.sl;});
+      s.lines[i].phat=a.out.reduce((t,o)=>t+o.sl,0); S.moves.push({ma:s.lines[i].ma,type:'X',sl:s.lines[i].phat});});
+    S.lots=S.lots.filter(l=>l.sl>0||l.q);
+    s.st='done';s.xuat='CTX-'+s.so.slice(3);s.hist.push({a:'Cấp phát',by:ROLES.kho.name,t:now()});
+    toast('Đã cấp phát và trừ tồn kho theo lô');go('inchungtu',s.so);},
+  print:e=>go('inchungtu',e.dataset.so),
+  toggleOk:e=>{const l=S.nhap.lines[+e.dataset.i];l.ok=!l.ok;render();},
+  doNhap:()=>{S.nhap.lines.forEach(l=>{ if(l.ok){S.lots.push({ma:l.ma,lo:l.lo,hsd:l.hsd,sl:l.sl,vt:'Khu nhận hàng'});S.moves.push({ma:l.ma,type:'N',sl:l.sl});}
+      else S.lots.push({ma:l.ma,lo:l.lo,hsd:l.hsd,sl:l.sl,vt:'Biệt trữ',q:true}); });
+    S.nhap.done=true;toast('Đã nhập kho. Hàng không đạt chuyển khu biệt trữ.');render();},
+  resetNhap:()=>{S.nhap=null;render();},
+  excel:()=>toast('Trong ứng dụng thật: tải file BaoCao_XNT_09-2026.xlsx'),
+  sendDutru:()=>toast('Đã gửi dự trù đột xuất tháng 10/2026 để Trưởng P.VTTBYT duyệt'),
+  drawerNew:()=>{S.drawer={};render();},
+  drawerEdit:e=>{S.drawer={ma:e.dataset.ma};render();},
+  saveItem:()=>{S.drawer=null;toast('Đã lưu vật tư (demo)');render();},
+};
+document.addEventListener('click',ev=>{
+  const g=ev.target.closest('[data-go]'); if(g){ev.preventDefault();return go(g.dataset.go);}
+  const a=ev.target.closest('[data-a]'); if(a&&A[a.dataset.a]){ if(a.classList.contains('ov')&&ev.target!==a)return; ev.preventDefault(); A[a.dataset.a](a); }
+});
+document.addEventListener('submit',ev=>{ev.preventDefault();S.role='kho';go('dashboard');});
+document.addEventListener('keydown',ev=>{ if(ev.key==='Escape'&&(S.modal||S.drawer)) A.closeOv(); });
+document.addEventListener('input',ev=>{
+  const t=ev.target;
+  if(t.id==='vtq'){S.vtq=t.value;render();}
+  else if(t.dataset.line!=null&&t.dataset.k==='sl'){S.draft.lines[+t.dataset.line].sl=t.value;}
+  else if(t.dataset.nl!=null){S.nhap.lines[+t.dataset.nl].gia=+t.value;}
+  else if(t.dataset.dt){S.dutru[t.dataset.dt]=+t.value;}
+  else if(t.id==='lydo'){S.draft.lydo=t.value;}
+});
+document.addEventListener('change',ev=>{
+  const t=ev.target;
+  if(t.id==='roleSel'){S.role=t.value;S.route='dashboard';render();}
+  else if(t.id==='vtNhom'){S.vtNhom=t.value;render();}
+  else if(t.id==='khoFilter'){S.khoFilter=t.value;render();}
+  else if(t.dataset.line!=null){S.draft.lines[+t.dataset.line][t.dataset.k]=t.value;render();}
+  else if(t.dataset.nl!=null||t.dataset.line!=null&&t.dataset.k==='sl'){render();}
+});
+const h=(location.hash||'').slice(1);
+if(h&&VIEWS[h]){S.role='kho';S.route=h;}
+render();
+</script>
