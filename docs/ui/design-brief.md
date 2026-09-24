@@ -16,42 +16,64 @@ Ngôn ngữ giao diện: **tiếng Việt** (có dấu đầy đủ). Định d�
 | Kế toán dược | Kiểm hóa đơn, lập phiếu nhập, đề nghị thanh toán |
 | Ban Giám đốc | Xem dashboard, báo cáo |
 
-## 3. Tính cách giao diện
-Sạch, rõ, **mật độ thông tin cao nhưng dễ quét** (người dùng là nhân viên y tế bận rộn). Không trang trí thừa, không gradient, không emoji. Ưu tiên bảng dữ liệu, trạng thái hiện bằng badge màu.
+## 3. Hướng thẩm mỹ: "Sổ kho và con dấu đỏ"
+Chất liệu lấy từ chính công việc của kho bệnh viện: **bìa sổ kho xanh rêu, giấy chứng từ, tem nhãn lô hàng và con dấu đỏ duyệt phiếu**. Giao diện là công cụ làm việc hằng ngày nên phải yên tĩnh, rõ ràng, mật độ thông tin cao. Chỉ có **một điểm nhấn đáng nhớ**: trạng thái phê duyệt thể hiện như **con dấu mực đỏ** trên phiếu (viền tròn/chữ nhật, hơi nghiêng 3–4°). Mọi thứ còn lại tiết chế.
+
+Những điều **không** làm (đều là dấu hiệu của giao diện AI sinh hàng loạt):
+- Không dùng xanh ngọc (teal) chung chung, không gradient, không emoji, không nền kem + chữ serif + màu đất nung.
+- Không chia mọi thứ thành card bo góc giống hệt nhau có cùng một lớp bóng; bảng dữ liệu nằm phẳng trên trang.
+- Không nhãn VIẾT HOA giãn chữ phía trên tiêu đề, không nối thông tin bằng dấu chấm giữa "A · B · C", không gắn "→" vào nút hay link.
+- Không tô màu riêng một chữ trong tiêu đề. Không dùng font mono cho nhãn nhỏ.
+- Không dùng hiệu ứng trượt/mờ dần cho từng khối khi tải trang.
 
 ## 4. Design tokens
 | Token | Light | Dark | Dùng cho |
 |---|---|---|---|
-| primary | `#0E7C86` | `#3FB8C1` | Nút chính, link, menu đang chọn |
-| primary-soft | `#E3F2F3` | `#133A3E` | Nền mục menu chọn, highlight |
-| bg | `#F4F7F7` | `#0F1719` | Nền trang |
-| surface | `#FFFFFF` | `#172225` | Card, bảng |
-| border | `#DCE4E5` | `#2A393C` | Viền |
-| text | `#15272B` | `#E4ECED` | Chữ chính |
-| text-muted | `#5B6E72` | `#93A7AB` | Chữ phụ |
+| ledger (primary) | `#1F5C4F` | `#7CC4AE` | Nút chính, menu đang chọn, link. Màu bìa sổ kho |
+| ledger-soft | `#E4EEEA` | `#1A2F2A` | Nền mục đang chọn, ô gợi ý |
+| paper (bg) | `#F5F6F2` | `#121715` | Nền trang, xám hơi ngả xanh, không phải màu kem |
+| sheet (surface) | `#FFFFFF` | `#1A201E` | Vùng bảng, form |
+| rule (border) | `#D6DBD3` | `#2C3531` | Đường kẻ bảng |
+| ink (text) | `#1B2623` | `#E3E8E4` | Chữ chính |
+| ink-muted | `#5E6B66` | `#98A59F` | Chữ phụ |
+| stamp (đỏ dấu) | `#B3261E` | `#F2837A` | **Chỉ** dùng cho con dấu và lỗi nghiêm trọng |
 
-**Màu trạng thái phiếu (cố định toàn hệ thống):**
-| Trạng thái | Màu |
-|---|---|
-| Nháp | xám `#6B7A7D` |
-| Chờ xác nhận / Chờ duyệt | vàng hổ phách `#B7791F` |
-| Đã duyệt | xanh dương `#2B6CB0` |
-| Đã cấp phát / Hoàn tất | xanh lá `#2F855A` |
-| Từ chối / Biệt trữ | đỏ `#C53030` |
+**Trạng thái phiếu:** badge phẳng nền nhạt trong danh sách, **con dấu** ở trang chi tiết và bản in.
+| Trạng thái | Màu | Chữ trên dấu |
+|---|---|---|
+| Nháp | xám `#6B746F` | Nháp |
+| Chờ xác nhận / Chờ duyệt | hổ phách `#A86A00` | Chờ duyệt |
+| Đã duyệt | xanh mực `#2A5DA8` | Đã duyệt |
+| Đã cấp phát | xanh sổ `#1F5C4F` | Đã cấp phát |
+| Từ chối / Biệt trữ | đỏ dấu `#B3261E` | Từ chối |
 
-**Cảnh báo hạn dùng:** < 30 ngày đỏ, < 90 ngày cam `#DD6B20`, còn lại bình thường.
+**Hạn dùng:** còn dưới 30 ngày thì chữ đỏ dấu kèm chữ "còn N ngày"; dưới 90 ngày thì hổ phách; còn lại để bình thường. Không dùng màu làm tín hiệu duy nhất, luôn có chữ đi kèm.
 
-- Font: **Be Vietnam Pro** (400/500/600/700); số liệu dùng `tabular-nums`.
-- Cỡ chữ: 12 / 14 (body) / 16 / 20 / 24.
-- Bo góc: 6px (input, nút), 10px (card). Lưới 8px. Bóng đổ rất nhẹ, chỉ cho card nổi/modal.
+**Typography**
+- Giao diện: **Lexend** (Google Fonts, hỗ trợ tiếng Việt, dễ đọc cho người đọc nhanh), 400/500/600. Số trong bảng dùng `tabular-nums`, căn phải.
+- Chứng từ in (A4) và tiêu đề trên con dấu: **Noto Serif** 400/700, để gợi văn bản hành chính.
+- Thang cỡ chữ (tỉ lệ 1,2): 12 / 14 (body) / 17 / 20 / 24 / 29. Viết hoa kiểu câu (sentence case) ở mọi nơi, trừ quốc hiệu và tiêu đề trên bản in.
+- Dòng chữ tối đa khoảng 75 ký tự.
+
+**Hình khối**
+- Bo góc theo cấp bậc: 4px cho input và nút, 8px cho modal/drawer, 0 cho bảng.
+- Bóng đổ chỉ dùng cho lớp nổi (modal, drawer, toast).
+- Lưới 8px.
+
+**Chuyển động:** chỉ một khoảnh khắc được dàn dựng. Khi bấm Duyệt hoặc Cấp phát, con dấu "đóng" xuống phiếu trong 180ms (scale 1,15 về 1, độ mờ 0 về 1). Tôn trọng `prefers-reduced-motion`.
+
+**Giọng văn**
+- Động từ rõ ràng, hành động giữ nguyên tên từ đầu đến cuối: nút "Cấp phát" dẫn tới toast "Đã cấp phát".
+- Lỗi nói rõ sai ở đâu và cách sửa, không xin lỗi.
+- Màn hình trống thì mời hành động, ví dụ "Chưa có phiếu nào. Lập phiếu lĩnh".
 
 ## 5. Layout chung
-- Desktop 1440px: **sidebar trái 240px** (logo BV + menu theo vai trò + tên người dùng/vai trò ở đáy), **header 56px** (breadcrumb, ô tìm kiếm, chuông thông báo có số, avatar).
-- Nội dung: tiêu đề trang + nút hành động chính góc phải, bên dưới là card chứa bộ lọc và bảng.
+- Desktop 1440px: **sidebar trái 240px** nền `ledger` như gáy sổ (logo BV, menu theo vai trò, tên người dùng và vai trò ở đáy); **header 56px** nền `paper` (breadcrumb, ô tìm kiếm, chuông thông báo có số, avatar).
+- Nội dung căn trái: tiêu đề trang, nút hành động chính ở góc phải, bên dưới là thanh lọc rồi bảng phẳng có đường kẻ `rule`.
 - Tablet: sidebar thu thành icon. Mobile: menu hamburger.
 
 ## 6. Component cần có
-Button (primary/secondary/ghost/danger), Input, Select có tìm kiếm, DatePicker, Table (sort, phân trang, dòng chọn), Badge trạng thái, Tabs, Drawer, Modal xác nhận (có ô lý do khi Từ chối), Timeline duyệt, Toast, KPI card, Empty state.
+Button (primary/secondary/ghost/danger), Input, Select có tìm kiếm, DatePicker, Table (sort, phân trang, dòng chọn), Badge trạng thái, **Con dấu trạng thái** (tròn và chữ nhật), Tabs, Drawer, Modal xác nhận (có ô lý do khi Từ chối), Timeline duyệt, Toast, KPI card, Empty state.
 
 ## 7. Stack đích
 Code sẽ viết bằng **Nuxt 3 + Nuxt UI (Tailwind)**. Nếu công cụ sinh code, yêu cầu Vue 3 `<script setup>` + Tailwind, hoặc HTML/Tailwind thuần.
