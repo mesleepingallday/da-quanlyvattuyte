@@ -39,6 +39,9 @@ HƯỚNG THẨM MỸ: "Sổ kho và con dấu đỏ"
 - Font Lexend cho giao diện; Noto Serif cho bản in và chữ trên con dấu. Số trong bảng căn phải, tabular-nums.
 - Tokens đầy đủ: [DÁN design-brief.md]
 
+HỆ COMPONENT
+Chỉ dùng component có trong Nuxt UI v4 (UDashboardGroup, UDashboardSidebar, UDashboardPanel, UDashboardNavbar, UTable, UForm, UTabs, UTimeline, UStepper, UModal, USlideover, UBadge, UAlert, UAuthForm). Chỉ riêng con dấu trạng thái được tự thiết kế. Xem docs/ui/nuxt-ui-mapping.md.
+
 RÀNG BUỘC (không được làm)
 - Không dùng teal chung chung, gradient hay emoji. Không chia mọi thứ thành card bo góc giống nhau có cùng bóng đổ.
 - Không đặt nhãn VIẾT HOA giãn chữ trên tiêu đề, không nối "A · B · C", không gắn "→" vào nút, không tô màu riêng một chữ trong tiêu đề, không dùng font mono cho nhãn nhỏ.
@@ -61,6 +64,7 @@ ALL UI COPY MUST BE VIETNAMESE with full diacritics, sentence case, dates dd/MM/
 AESTHETIC: "Ledger and red stamp". Materials: moss-green warehouse ledger covers, paper forms, lot labels, red ink approval stamps. The ONE memorable element: approval status rendered as a slightly rotated red-ink stamp on the slip. Everything else calm and disciplined. Sidebar #1F5C4F like a ledger spine; page #F5F6F2; flat ruled tables (#D6DBD3, radius 0); Lexend for UI, Noto Serif for print forms and stamp text; right-aligned tabular numbers. Tokens: [PASTE design-brief.md]
 DO NOT: generic teal, gradients, emoji, identical rounded cards with the same shadow, tracked uppercase eyebrows, "A · B · C" meta strings, "→" on buttons, single highlighted word in headings, monospace for small labels, color as the only signal.
 PROCESS: First write a 5-line design plan (color, type, layout with ASCII wireframe, the one accent, what you deliberately avoid). Check it against a generic dashboard and revise. Then build.
+COMPONENTS: use only Nuxt UI v4 components (UDashboardGroup, UDashboardSidebar, UDashboardPanel, UTable, UForm, UTabs, UTimeline, UStepper, UModal, USlideover, UBadge, UAlert, UAuthForm); the approval stamp is the only custom component.
 DATA: use only this sample data: [PASTE sample-data.json]
 OUTPUT: 1440px desktop, tablet-friendly. Start with the Dashboard for the Storekeeper role.
 ```
