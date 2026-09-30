@@ -1,0 +1,231 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hướng thiết kế VTYT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@400;600&display=swap&subset=vietnamese" rel="stylesheet">
+<style>*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+body{margin:0;background:#EDEDED;color:#222;font:16px/1.55 system-ui,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:hidden}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+.gnav{position:sticky;top:0;z-index:20;background:#222;color:#fff}
+.gnav .gin{max-width:1240px;margin:0 auto;padding:0 16px;display:flex;gap:16px;align-items:center;justify-content:space-between;min-height:48px;flex-wrap:wrap}
+.gnav .links{display:flex;gap:4px;flex-wrap:wrap}
+.gnav a{color:#fff;text-decoration:none;padding:12px 10px;font-size:14px}
+.gnav a:hover,.gnav a:focus-visible{background:#444;outline:none}
+.gnav b{font-size:14px;font-weight:600}
+.intro{padding-top:32px;padding-bottom:24px}.intro h1{font-size:28px;margin:0 0 8px;line-height:1.25}.intro p{max-width:70ch;margin:0;color:#444}
+.cmp{padding-top:40px;padding-bottom:40px}.cmp h2{font-size:26px}
+.cmp table{width:100%;border-collapse:collapse;background:#fff;font-size:14px;min-width:720px}
+.cmp th,.cmp td{border:1px solid #ccc;padding:10px 12px;text-align:left;vertical-align:top}
+.cmp th{background:#f6f6f6}.cmp tr.rec td{background:#FFF8E5}.rectag{display:inline-block;margin-top:4px;border:1px solid #222;padding:0 6px;font-size:12px;font-weight:600}
+.foot{padding-bottom:40px}
+.tw{overflow-x:auto;max-width:100%}
+.mono{font-variant-numeric:tabular-nums}
+.sm{font-size:13px}.muted{color:var(--ink2)}
+.cmp .muted,.foot{color:#555}
+
+/* shared component layer, driven by tokens */
+.dir{background:var(--bg);color:var(--ink);font-family:var(--font);padding:40px 0;border-top:1px solid var(--line);line-height:1.5}
+.dir .tag{margin:0 0 4px;font-size:13px;font-weight:600;color:var(--accentText)}
+.dir h2{font-size:32px;margin:0 0 6px;line-height:1.2;font-weight:600}
+.dir h3{font-size:15px;margin:0 0 10px;font-weight:600}
+.dir h4{font-size:18px;margin:0 0 2px;font-weight:600}
+.dir p{margin:0 0 8px}
+.dh{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+.rat{max-width:52ch;color:var(--ink2)}
+.sws{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px 12px;margin-bottom:12px}
+.sw{display:flex;align-items:center;gap:8px;font-size:13px}.sw i{width:26px;height:26px;border:1px solid var(--line);flex:none;border-radius:var(--r)}
+.sw b{font-weight:600;display:block}.sw span{line-height:1.25}
+.spec1{font-size:22px;font-weight:600;line-height:1.3}.spec2{font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.cell{min-width:0;border-top:1px solid var(--line);padding-top:14px}
+.span2{grid-column:1/-1}
+.mono,.lotchip .mono{font-family:var(--mono)}
+.ic{flex:none;vertical-align:-3px;margin-right:4px}
+.btn{font:inherit;font-size:14px;min-height:40px;padding:0 14px;border:1px solid var(--ink);background:var(--surface);color:var(--ink);border-radius:var(--r);cursor:pointer;font-weight:500}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:var(--onPrimary)}
+.btn:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.shell{display:grid;grid-template-columns:184px 1fr;border:1px solid var(--line);background:var(--surface);min-height:300px}
+.side{background:var(--sidebg);color:var(--sideink);padding:10px 8px;display:flex;flex-direction:column;gap:2px;border-right:1px solid var(--line)}
+.side .brand{display:flex;align-items:center;gap:6px;font-weight:600;padding:6px 8px 12px}
+.side a{display:flex;align-items:center;gap:4px;color:inherit;text-decoration:none;padding:8px;font-size:14px;border-radius:var(--r);min-height:40px}
+.side a.on{background:var(--sideOn);font-weight:600}
+.who{margin-top:auto;padding:8px;font-size:13px;display:flex;flex-direction:column}.who span{opacity:.75}
+.mainp{min-width:0}
+.top{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.scan{display:flex;align-items:center;gap:8px;border:1px solid var(--line2);padding:0 10px;min-height:40px;flex:1;max-width:420px;background:var(--surface);border-radius:var(--r)}
+.scan input{border:0;background:none;font:inherit;font-size:14px;flex:1;min-width:0;outline:none;color:var(--ink)}
+kbd{font:12px var(--mono);border:1px solid var(--line2);padding:1px 6px;border-radius:2px}
+.panel{padding:14px}
+.list{list-style:none;margin:10px 0 0;padding:0}
+.list li{display:grid;grid-template-columns:118px 1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.badge{display:inline-flex;align-items:center;gap:2px;font-size:13px;font-weight:500;padding:2px 8px 2px 6px;border:1px solid currentColor;border-radius:var(--rb);white-space:nowrap;line-height:1.5}
+.badge .ic{margin-right:3px}
+.b-draft{color:var(--s-draft);border-style:dashed}
+.b-wait{color:var(--s-wait);background:var(--s-wait-bg)}
+.b-ok{color:var(--s-ok);background:var(--s-ok-bg)}
+.b-done{color:#fff;background:var(--s-done);border-color:var(--s-done)}
+.b-no{color:var(--s-no);background:var(--s-no-bg);border-width:2px;font-weight:600}
+table{border-collapse:collapse;width:100%;font-size:14px}
+.lots,.tk{min-width:760px}
+.dir th{text-align:left;font-weight:600;font-size:13px;padding:8px 10px;border-bottom:2px solid var(--ink);color:var(--ink);white-space:nowrap;background:var(--surface)}
+.dir td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.dir th.num,.dir td.num{text-align:right;font-variant-numeric:tabular-nums}
+.st{display:inline-flex;align-items:center;font-size:13px;gap:0;white-space:nowrap}
+.st-crit{color:var(--crit);font-weight:600}.st-warn{color:var(--warnText);font-weight:600}.st-ok{color:var(--ink2)}
+.login{max-width:340px;border:1px solid var(--line2);background:var(--surface);padding:18px;border-radius:var(--r)}
+.login label{display:block;font-size:14px;font-weight:500;margin:12px 0 0}
+.login input:not([type=checkbox]){display:block;width:100%;min-height:44px;margin-top:4px;padding:0 10px;font:inherit;border:1px solid var(--line2);background:var(--bg);color:var(--ink);border-radius:var(--r)}
+.login .chk{display:flex;gap:8px;align-items:center;font-weight:400}.login .chk input{width:18px;height:18px}
+.login .btn{width:100%;margin-top:14px;min-height:44px}
+.err{margin:12px 0 0;font-size:13px;color:var(--crit);display:flex;align-items:flex-start;gap:0}
+.paper{background:#D4D4D4;padding:20px;overflow-x:auto}
+.a4{background:#fff;color:#000;width:640px;max-width:none;margin:0 auto;padding:32px 36px;font-size:13px;line-height:1.45;border:1px solid #999;font-family:var(--printfont)}
+.a4 .mono{font-family:var(--printmono)}
+.a4h{display:flex;justify-content:space-between;gap:20px;text-align:center;font-size:12px}.a4h .r{text-align:center}
+.a4h>div:first-child{text-align:center}
+.a4 h5{font-size:18px;text-align:center;margin:18px 0 4px;letter-spacing:0;font-weight:700}
+.ctr{text-align:center;font-size:12px}
+.a4 table{font-size:12px;margin-top:10px}.a4 th,.a4 td{border:1px solid #000;padding:4px 6px;background:#fff;color:#000;font-size:12px}
+.a4 th{border-bottom:1px solid #000}.a4 .tot td{font-weight:700}
+.sign{display:flex;justify-content:space-between;text-align:center;margin-top:18px;min-height:90px}.sign span{flex:1;font-weight:600}.sign i{font-weight:400;font-style:italic}
+
+/* ---------- A ---------- */
+.dir-a{--bg:#fff;--surface:#fff;--ink:#111214;--ink2:#4B4E55;--line:#D9DADD;--line2:#8C8F96;--accent:#F2A900;--accentText:#8A5A00;--primary:#111214;--onPrimary:#fff;--focus:#F2A900;--crit:#B42318;--warnText:#8A5A00;--sidebg:#fff;--sideink:#111214;--sideOn:#F4F4F5;--r:0;--rb:0;--font:"Be Vietnam Pro",system-ui,"Segoe UI",Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;--printfont:"Be Vietnam Pro",Arial,sans-serif;--printmono:"IBM Plex Mono",Consolas,monospace;
+--s-draft:#4B4E55;--s-wait:#8A5A00;--s-wait-bg:#FFF4D6;--s-ok:#111214;--s-ok-bg:#fff;--s-done:#111214;--s-no:#B42318;--s-no-bg:#fff}
+.dir-a .side a.on{box-shadow:inset 3px 0 0 var(--accent)}
+.dir-a .scan{border:2px solid var(--ink);min-height:44px}
+.dir-a .top{background:#FAFAFA}
+.lotchip{display:inline-flex;flex-direction:column;gap:3px;border:1px solid var(--ink);padding:2px 8px 3px;min-width:88px;background:#fff;font-size:13px;font-weight:500}
+.lotchip .cd{display:block;height:4px;background:#E6E6E8;width:100%}.lotchip .cd b{display:block;height:100%;background:var(--ink)}
+.lotchip.lv1 .cd b{background:var(--accent)}.lotchip.lv1{border-left:4px solid var(--accent)}
+.lotchip.lv2 .cd b{background:var(--crit)}.lotchip.lv2{border:2px solid var(--crit);border-left-width:4px}
+.lotstrip{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.dir-a td{border-right:1px solid var(--line)}.dir-a td:last-child{border-right:0}
+.dir-a tr.lv1 td.num:nth-child(5){background:#FFF4D6}
+
+/* ---------- B ---------- */
+.dir-b{--bg:#EEF1F5;--surface:#fff;--ink:#1E2A38;--ink2:#506074;--line:#D3DAE3;--line2:#9BA9BA;--accentText:#2F4B78;--primary:#2F4B78;--onPrimary:#fff;--focus:#2F4B78;--crit:#A8261B;--warnText:#8A5A00;--sidebg:#E3E8EF;--sideink:#1E2A38;--sideOn:#fff;--r:4px;--rb:4px;--font:"IBM Plex Sans",system-ui,"Segoe UI",Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;--printfont:"IBM Plex Sans",Arial,sans-serif;--printmono:"IBM Plex Sans",Arial,sans-serif;
+--b-phong:#B7892F;--b-mat:#4A86C5;--b-lanh:#23409A;
+--s-draft:#506074;--s-wait:#8A5A00;--s-wait-bg:#FBF1DA;--s-ok:#1F5E3B;--s-ok-bg:#E6F2EA;--s-done:#2F4B78;--s-no:#A8261B;--s-no-bg:#FBEAE8}
+.dir-b .mono{font-family:var(--font)}
+.dir-b .lots .mono,.dir-b .tk .mono{font-variant-numeric:tabular-nums}
+.band{display:inline-flex;gap:2px;align-items:flex-end;height:14px;margin-right:8px;vertical-align:-2px}
+.band i{display:block;width:5px;height:14px;background:var(--bc)}.band i.off{background:transparent;box-shadow:inset 0 0 0 1px var(--bc);opacity:.6}
+.band-phong{--bc:var(--b-phong)}.band-mat{--bc:var(--b-mat)}.band-lanh{--bc:var(--b-lanh)}
+.band i:nth-child(1){height:6px}.band i:nth-child(2){height:10px}.band i:nth-child(3){height:14px}
+.rowband td:first-child{box-shadow:inset 6px 0 0 var(--bc);padding-left:16px}
+.tempnow{font-size:13px;color:var(--ink2);display:flex;align-items:center}
+.dir-b .panel{background:#fff}
+.dir-b .lots tr.lv2 td.num:nth-child(5){color:var(--crit);font-weight:600}
+.dir-b .top{background:#F7F9FB}
+
+/* ---------- C ---------- */
+.dir-c{--bg:#F6F5F8;--surface:#FFFFFF;--ink:#1B1B4B;--ink2:#55557A;--line:#DAD8E4;--line2:#9A98B5;--accentText:#3E3A9E;--primary:#3E3A9E;--onPrimary:#fff;--focus:#3E3A9E;--crit:#B42318;--warnText:#8F4208;--sidebg:#1B1B4B;--sideink:#F0EFFA;--sideOn:#33337A;--r:6px;--rb:999px;--font:"Be Vietnam Pro",system-ui,"Segoe UI",Arial,sans-serif;--mono:"Be Vietnam Pro",system-ui,Arial,sans-serif;--printfont:"Source Serif 4",Georgia,"Times New Roman",serif;--printmono:"Source Serif 4",Georgia,serif;
+--s-draft:#55557A;--s-wait:#8F4208;--s-wait-bg:#FDF0E1;--s-ok:#2B4A9E;--s-ok-bg:#E8EDFB;--s-done:#1B1B4B;--s-no:#B42318;--s-no-bg:#FCEDEB}
+.dir-c .mono{font-variant-numeric:tabular-nums;font-weight:500}
+.dir-c .shell{border-radius:8px;overflow:hidden}
+.dir-c .shift{font-size:13px;color:var(--ink2)}
+.queue{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.q{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff}
+.q.over{border-color:var(--crit);border-width:1px 1px 1px 4px}
+.cb{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none}.cb input{width:22px;height:22px;accent-color:#3E3A9E}
+.qmain{flex:1;min-width:0}.qt{font-size:15px;font-weight:500}
+.qs{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px}
+.sla{font-size:13px;font-weight:600;display:inline-flex;align-items:center;color:var(--ink2)}
+.sla.over{color:var(--crit)}
+.dir-c .lots tr.lv2 td:nth-child(5){color:var(--crit);font-weight:600}
+.dir-c .top{background:#fff}
+
+@media (max-width:820px){
+ .dh,.grid{grid-template-columns:1fr}
+ .span2{grid-column:auto}
+ .shell{grid-template-columns:1fr}
+ .side{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:4px}
+ .side .brand,.who{display:none}.side a{white-space:nowrap}
+ .dir h2{font-size:26px}
+ .list li{grid-template-columns:1fr;gap:4px}
+ .list li .btn{justify-self:start}
+ .q{flex-wrap:wrap}.q .btn{margin-left:56px}
+ .intro h1{font-size:24px}
+ .gnav .gin{padding:0 8px}
+}
+</style></head><body><svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-draft" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2.5 2"/></symbol>
+<symbol id="i-wait" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 4.5V8l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+<symbol id="i-ok" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="currentColor"/><path d="M5.2 8.2l2 2 3.6-4" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-box" viewBox="0 0 16 16"><path d="M2.5 5L8 2.5 13.5 5v6L8 13.5 2.5 11z" fill="currentColor"/><path d="M2.8 5.2L8 7.8l5.2-2.6M8 7.8v5.5" fill="none" stroke="#fff" stroke-width="1.2"/></symbol>
+<symbol id="i-no" viewBox="0 0 16 16"><path d="M5.2 1.8h5.6l3.4 3.4v5.6l-3.4 3.4H5.2L1.8 10.8V5.2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.7 5.7l4.6 4.6M10.3 5.7l-4.6 4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+<symbol id="i-warn" viewBox="0 0 16 16"><path d="M8 2l6.2 11H1.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6.5v3.2M8 11.4v.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+<symbol id="i-crit" viewBox="0 0 16 16"><path d="M5.2 1.8h5.6l3.4 3.4v5.6l-3.4 3.4H5.2L1.8 10.8V5.2z" fill="currentColor"/><path d="M8 4.8v4M8 10.6v.1" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></symbol>
+<symbol id="i-scan" viewBox="0 0 16 16"><path d="M2 5V2.5h3M11 2.5h3V5M14 11v2.5h-3M5 13.5H2V11M4.5 8h7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+<symbol id="i-home" viewBox="0 0 16 16"><path d="M2.5 7.5L8 2.8l5.5 4.7V13h-11z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+<symbol id="i-doc" viewBox="0 0 16 16"><path d="M3.5 1.8h6l3 3v9.4h-9z M9.5 1.8v3h3M5.5 8h5M5.5 10.6h5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+<symbol id="i-stack" viewBox="0 0 16 16"><path d="M2 4.5L8 2l6 2.5L8 7zM2 8l6 2.5L14 8M2 11.3L8 14l6-2.7" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+<symbol id="i-in" viewBox="0 0 16 16"><path d="M8 2v8M4.8 7.2L8 10.4l3.2-3.2M3 13h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-chart" viewBox="0 0 16 16"><path d="M2.5 13.5h11M4.5 11V7.5M8 11V3.5M11.5 11V6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+<symbol id="i-clock" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V8l2.5 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+<symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+</defs></svg>
+<nav class="gnav" aria-label="Chuyển hướng"><div class="gin"><b>Hướng thiết kế VTYT</b><span class="links"><a href="#a">A. Tem lô</a><a href="#b">B. Chuỗi lạnh</a><a href="#c">C. Bàn giao ca</a><a href="#sosanh">So sánh</a></span></div></nav>
+<header class="intro wrap"><h1>Ba hướng thiết kế cho Kho Vật tư y tế</h1><p>Bệnh viện quận Phú Nhuận. Mỗi hướng hiển thị cùng một bộ mẫu: bảng màu, chữ, khung ứng dụng, bảng lô, badge trạng thái, đăng nhập và bản in A4. Dữ liệu lấy từ bộ mẫu của dự án, ngày mẫu là 30/09/2026.</p></header>
+<main>
+<section id="a" class="dir dir-a" aria-labelledby="h-a">
+ <div class="wrap">
+ <header class="dh"><div><p class="tag">Hướng A · Đề xuất</p><h2 id="h-a">Tem lô</h2><p class="rat">Mỗi lô là một tem GS1: mực đen trên nền trắng, một màu hổ phách báo hiệu, thanh đếm ngược hạn dùng ngay trên tem.</p></div><div><div class="sws"><div class="sw"><i style="background:#111214"></i><span><b>Mực</b> #111214</span></div><div class="sw"><i style="background:#FFFFFF"></i><span><b>Giấy</b> #FFFFFF</span></div><div class="sw"><i style="background:#D9DADD"></i><span><b>Kẻ</b> #D9DADD</span></div><div class="sw"><i style="background:#F2A900"></i><span><b>Hổ phách</b> #F2A900</span></div><div class="sw"><i style="background:#8A5A00"></i><span><b>Chữ hổ phách</b> #8A5A00</span></div><div class="sw"><i style="background:#B42318"></i><span><b>Nghiêm trọng</b> #B42318</span></div></div><div class="type"><p class="spec1">Phiếu lĩnh vật tư – ễ ặ ở ữ 1.250 12.500 ₫</p><p class="spec2">Bơm tiêm 5ml · Găng tay khám size M · Lô <span class="mono">BT2402</span> · HSD 20/11/2026</p><p class="sm muted">Be Vietnam Pro cho chữ, IBM Plex Mono chỉ cho số lô và mã vạch.</p></div></div></header>
+ <div class="grid">
+  <div class="cell span2"><h3>1. Khung ứng dụng và màn Thủ kho</h3><div class="shell"><nav class="side"><div class="brand"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-stack"/></svg><span>Kho VTYT</span></div><a href="#" class="on" aria-current="page"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-home"/></svg><span>Việc cần làm</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-doc"/></svg><span>Phiếu lĩnh</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-stack"/></svg><span>Tồn kho theo lô</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-in"/></svg><span>Nhập kho</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-chart"/></svg><span>Báo cáo XNT</span></a><div class="who"><b>Trần Văn Hùng</b><span>Thủ kho</span></div></nav><div class="mainp"><div class="top"><div class="scan"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-scan"/></svg><input placeholder="Quét mã hoặc gõ Ctrl+K" aria-label="Quét mã hoặc gõ lệnh"><kbd>Ctrl K</kbd></div><span class="muted sm">Kho chính</span></div><section class="panel"><h4>Việc cần làm hôm nay</h4><p class="muted sm">Thứ Tư, 30/09/2026 · 3 phiếu chờ bạn xử lý</p><ul class="list"><li><span class="mono">PL-2026-0012</span><span>Khoa Nội · 3 mặt hàng</span><span class="badge b-wait"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-wait"/></svg>Chờ kho xác nhận</span><button class="btn primary">Xác nhận</button></li><li><span class="mono">PL-2026-0011</span><span>Khoa Cấp cứu · 2 mặt hàng</span><span class="badge b-wait"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-wait"/></svg>Chờ duyệt</span><button class="btn ">Xem phiếu</button></li><li><span class="mono">PL-2026-0010</span><span>Khoa Ngoại · 4 mặt hàng</span><span class="badge b-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-ok"/></svg>Đã duyệt</span><button class="btn ">Cấp phát</button></li></ul><div class="lotstrip"><span class="muted sm">Lô cần chú ý:</span><span class="lotchip lv2"><span class="mono">GT2310</span><i class="cd"><b style="width:7%"></b></i></span><span class="lotchip lv1"><span class="mono">BT2402</span><i class="cd"><b style="width:28%"></b></i></span></div></section></div></div></div>
+  <div class="cell span2"><h3>2. Bảng lô với tem lô và thanh đếm ngược</h3><div class="tw"><table class="lots"><thead><tr><th>Mã</th><th>Vật tư</th><th>Số lô</th><th class="num">HSD</th><th class="num">Còn lại</th><th class="num">Tồn (ĐVT)</th><th>Bảo quản</th><th>Mức cảnh báo</th></tr></thead><tbody><tr class="lv0 "><td class="mono">VT001</td><td>Bơm tiêm 5ml</td><td><span class="lotchip lv0"><span class="mono">BT2409</span><i class="cd"><b style="width:100%"></b></i></span></td><td class="num">15/08/2027</td><td class="num">còn 319 ngày</td><td class="num">1.500</td><td>Phòng</td><td><span class="st st-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-check"/></svg>Bình thường</span></td></tr><tr class="lv1 "><td class="mono">VT001</td><td>Bơm tiêm 5ml</td><td><span class="lotchip lv1"><span class="mono">BT2402</span><i class="cd"><b style="width:28%"></b></i></span></td><td class="num">20/11/2026</td><td class="num">còn 51 ngày</td><td class="num">800</td><td>Phòng</td><td><span class="st st-warn"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-warn"/></svg>Cảnh báo</span></td></tr><tr class="lv2 "><td class="mono">VT002</td><td>Găng tay khám size M</td><td><span class="lotchip lv2"><span class="mono">GT2310</span><i class="cd"><b style="width:7%"></b></i></span></td><td class="num">12/10/2026</td><td class="num">còn 12 ngày</td><td class="num">25</td><td>Phòng</td><td><span class="st st-crit"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-crit"/></svg>Nghiêm trọng</span></td></tr></tbody></table></div></div>
+  <div class="cell"><h3>3. Badge trạng thái phiếu</h3><div class="badges"><span class="badge b-draft"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-draft"/></svg>Nháp</span><span class="badge b-wait"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-wait"/></svg>Chờ duyệt</span><span class="badge b-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-ok"/></svg>Đã duyệt</span><span class="badge b-done"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-box"/></svg>Đã cấp phát</span><span class="badge b-no"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-no"/></svg>Từ chối</span></div><p class="sm muted">Mỗi trạng thái có hình riêng (nét đứt, đồng hồ, dấu tích, hộp, bát giác gạch chéo) nên vẫn đọc được khi in đen trắng.</p></div>
+  <div class="cell"><h3>4. Đăng nhập</h3><div class="login"><h4>Đăng nhập</h4><p class="muted">Kho Vật tư y tế – BV quận Phú Nhuận</p><label>Tên đăng nhập<input value="tranvanhung" readonly></label><label>Mật khẩu<input type="password" value="••••••••" readonly></label><label class="chk"><input type="checkbox" checked> Ghi nhớ</label><button class="btn primary">Đăng nhập</button><p class="err"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-crit"/></svg>Sai mật khẩu. Kiểm tra phím Caps Lock rồi thử lại.</p></div></div>
+  <div class="cell span2"><h3>5. Bản in A4, đen trắng</h3><div class="paper"><div class="a4"><div class="a4h"><div><b>Sở Y tế TP. Hồ Chí Minh</b><br><b>Bệnh viện quận Phú Nhuận</b><br><span class="sm">Kho Vật tư y tế</span></div><div class="r"><b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b><br>Độc lập – Tự do – Hạnh phúc</div></div>
+ <h5>CHỨNG TỪ XUẤT KHO</h5><p class="ctr">Số CTX: <span class="mono">CTX-2026-0012</span> · Ngày 30/09/2026<br>Theo phiếu lĩnh <span class="mono">PL-2026-0012</span> · Đơn vị nhận: Khoa Nội</p>
+ <table><thead><tr><th>Mã</th><th>Tên VTTHYT</th><th>ĐVT</th><th class="num">SL</th><th class="num">Đơn giá</th><th class="num">Thành tiền</th></tr></thead><tbody>
+ <tr><td class="mono">VT001</td><td>Bơm tiêm 5ml</td><td>Cái</td><td class="num">200</td><td class="num">1.150</td><td class="num">230.000</td></tr>
+ <tr><td class="mono">VT002</td><td>Găng tay khám size M</td><td>Hộp</td><td class="num">10</td><td class="num">68.000</td><td class="num">680.000</td></tr>
+ <tr><td class="mono">VT005</td><td>Dây truyền dịch</td><td>Bộ</td><td class="num">50</td><td class="num">5.200</td><td class="num">260.000</td></tr>
+ <tr class="tot"><td colspan="5">Tổng cộng</td><td class="num">1.170.000 ₫</td></tr></tbody></table>
+ <div class="sign"><span>Người phát<br><i class="sm">(Ký, ghi rõ họ tên)</i></span><span>Người lĩnh<br><i class="sm">(Ký, ghi rõ họ tên)</i></span><span>P.VTTBYT<br><i class="sm">(Ký, ghi rõ họ tên)</i></span></div></div></div></div>
+ </div></div></section>
+<section id="b" class="dir dir-b" aria-labelledby="h-b">
+ <div class="wrap">
+ <header class="dh"><div><p class="tag">Hướng B</p><h2 id="h-b">Chuỗi lạnh</h2><p class="rat">Giao diện bình tĩnh như thiết bị đo. Điều kiện bảo quản là dải nhiệt độ chạy dọc mỗi dòng: 1 vạch Phòng, 2 vạch Mát, 3 vạch Lạnh.</p></div><div><div class="sws"><div class="sw"><i style="background:#1E2A38"></i><span><b>Mực</b> #1E2A38</span></div><div class="sw"><i style="background:#EEF1F5"></i><span><b>Nền</b> #EEF1F5</span></div><div class="sw"><i style="background:#3B5B8C"></i><span><b>Xanh thép</b> #3B5B8C</span></div><div class="sw"><i style="background:#B7892F"></i><span><b>Phòng</b> #B7892F</span></div><div class="sw"><i style="background:#4A86C5"></i><span><b>Mát</b> #4A86C5</span></div><div class="sw"><i style="background:#23409A"></i><span><b>Lạnh</b> #23409A</span></div></div><div class="type"><p class="spec1">Phiếu lĩnh vật tư – ễ ặ ở ữ 1.250 12.500 ₫</p><p class="spec2">Bơm tiêm 5ml · Găng tay khám size M · Lô <span class="mono">BT2402</span> · HSD 20/11/2026</p><p class="sm muted">IBM Plex Sans.</p></div></div></header>
+ <div class="grid">
+  <div class="cell span2"><h3>1. Khung ứng dụng và màn Thủ kho</h3><div class="shell"><nav class="side"><div class="brand"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-stack"/></svg><span>Kho VTYT</span></div><a href="#" class="on" aria-current="page"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-home"/></svg><span>Việc cần làm</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-doc"/></svg><span>Phiếu lĩnh</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-stack"/></svg><span>Tồn kho theo lô</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-in"/></svg><span>Nhập kho</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-chart"/></svg><span>Báo cáo XNT</span></a><div class="who"><b>Trần Văn Hùng</b><span>Thủ kho</span></div></nav><div class="mainp"><div class="top"><div class="scan"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-search"/></svg><input placeholder="Tìm vật tư, số lô, số phiếu" aria-label="Tìm"></div><span class="tempnow"><span class="band band-phong"><i></i><i class="off"></i><i class="off"></i></span>Kho chính · Phòng 15–25°C</span></div><section class="panel"><h4>Việc cần làm hôm nay</h4><p class="muted sm">Thứ Tư, 30/09/2026 · 3 phiếu chờ bạn xử lý</p><div class="tw"><table class="tk"><thead><tr><th>Số phiếu</th><th>Khoa</th><th class="num">Mặt hàng</th><th>Bảo quản</th><th>Trạng thái</th><th></th></tr></thead><tbody>
+ <tr class="rowband band-mat"><td class="mono">PL-2026-0012</td><td>Khoa Nội</td><td class="num">3</td><td><span class="band band-mat"><i></i><i></i><i class="off"></i></span>Có hàng Mát</td><td><span class="badge b-wait"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-wait"/></svg>Chờ kho xác nhận</span></td><td><button class="btn primary">Xác nhận</button></td></tr><tr class="rowband band-phong"><td class="mono">PL-2026-0011</td><td>Khoa Cấp cứu</td><td class="num">2</td><td><span class="band band-phong"><i></i><i class="off"></i><i class="off"></i></span>Phòng</td><td><span class="badge b-wait"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-wait"/></svg>Chờ duyệt</span></td><td><button class="btn ">Xem phiếu</button></td></tr><tr class="rowband band-lanh"><td class="mono">PL-2026-0010</td><td>Khoa Ngoại</td><td class="num">4</td><td><span class="band band-lanh"><i></i><i></i><i></i></span>Có hàng Lạnh</td><td><span class="badge b-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-ok"/></svg>Đã duyệt</span></td><td><button class="btn ">Cấp phát</button></td></tr></tbody></table></div></section></div></div></div>
+  <div class="cell span2"><h3>2. Bảng lô với dải nhiệt độ trên dòng</h3><div class="tw"><table class="lots"><thead><tr><th>Mã</th><th>Vật tư</th><th>Số lô</th><th class="num">HSD</th><th class="num">Còn lại</th><th class="num">Tồn (ĐVT)</th><th>Bảo quản</th><th>Mức cảnh báo</th></tr></thead><tbody><tr class="lv0 rowband band-phong"><td class="mono">VT001</td><td>Bơm tiêm 5ml</td><td><span class="mono">BT2409</span></td><td class="num">15/08/2027</td><td class="num">còn 319 ngày</td><td class="num">1.500</td><td><span class="band band-phong" title="Phòng 15–25°C"><i></i><i class="off"></i><i class="off"></i></span>Phòng 15–25°C</td><td><span class="st st-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-check"/></svg>Bình thường</span></td></tr><tr class="lv1 rowband band-phong"><td class="mono">VT001</td><td>Bơm tiêm 5ml</td><td><span class="mono">BT2402</span></td><td class="num">20/11/2026</td><td class="num">còn 51 ngày</td><td class="num">800</td><td><span class="band band-phong" title="Phòng 15–25°C"><i></i><i class="off"></i><i class="off"></i></span>Phòng 15–25°C</td><td><span class="st st-warn"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-warn"/></svg>Cảnh báo</span></td></tr><tr class="lv2 rowband band-phong"><td class="mono">VT002</td><td>Găng tay khám size M</td><td><span class="mono">GT2310</span></td><td class="num">12/10/2026</td><td class="num">còn 12 ngày</td><td class="num">25</td><td><span class="band band-phong" title="Phòng 15–25°C"><i></i><i class="off"></i><i class="off"></i></span>Phòng 15–25°C</td><td><span class="st st-crit"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-crit"/></svg>Nghiêm trọng</span></td></tr><tr class="lv0 rowband band-mat"><td class="mono">VT006</td><td>Que thử đường huyết</td><td><span class="mono">QT2403</span></td><td class="num">08/10/2026</td><td class="num">còn 8 ngày</td><td class="num">12</td><td><span class="band band-mat"><i></i><i></i><i class="off"></i></span>Mát 8–15°C</td><td><span class="st st-crit"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-crit"/></svg>Nghiêm trọng</span></td></tr>
+  <tr class="lv0 rowband band-lanh"><td class="mono">HC001</td><td>Hóa chất xét nghiệm Glucose</td><td><span class="mono">HC2405</span></td><td class="num">28/02/2027</td><td class="num">còn 151 ngày</td><td class="num">6</td><td><span class="band band-lanh"><i></i><i></i><i></i></span>Lạnh 2–8°C</td><td><span class="st st-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-check"/></svg>Bình thường</span></td></tr></tbody></table></div></div>
+  <div class="cell"><h3>3. Badge trạng thái phiếu</h3><div class="badges"><span class="badge b-draft"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-draft"/></svg>Nháp</span><span class="badge b-wait"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-wait"/></svg>Chờ duyệt</span><span class="badge b-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-ok"/></svg>Đã duyệt</span><span class="badge b-done"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-box"/></svg>Đã cấp phát</span><span class="badge b-no"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-no"/></svg>Từ chối</span></div><p class="sm muted">Mỗi trạng thái có hình riêng (nét đứt, đồng hồ, dấu tích, hộp, bát giác gạch chéo) nên vẫn đọc được khi in đen trắng.</p></div>
+  <div class="cell"><h3>4. Đăng nhập</h3><div class="login"><h4>Đăng nhập</h4><p class="muted">Kho Vật tư y tế – BV quận Phú Nhuận</p><label>Tên đăng nhập<input value="tranvanhung" readonly></label><label>Mật khẩu<input type="password" value="••••••••" readonly></label><label class="chk"><input type="checkbox" checked> Ghi nhớ</label><button class="btn primary">Đăng nhập</button><p class="err"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-crit"/></svg>Sai mật khẩu. Kiểm tra phím Caps Lock rồi thử lại.</p></div></div>
+  <div class="cell span2"><h3>5. Bản in A4, đen trắng</h3><div class="paper"><div class="a4"><div class="a4h"><div><b>Sở Y tế TP. Hồ Chí Minh</b><br><b>Bệnh viện quận Phú Nhuận</b><br><span class="sm">Kho Vật tư y tế</span></div><div class="r"><b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b><br>Độc lập – Tự do – Hạnh phúc</div></div>
+ <h5>CHỨNG TỪ XUẤT KHO</h5><p class="ctr">Số CTX: <span class="mono">CTX-2026-0012</span> · Ngày 30/09/2026<br>Theo phiếu lĩnh <span class="mono">PL-2026-0012</span> · Đơn vị nhận: Khoa Nội</p>
+ <table><thead><tr><th>Mã</th><th>Tên VTTHYT</th><th>ĐVT</th><th class="num">SL</th><th class="num">Đơn giá</th><th class="num">Thành tiền</th></tr></thead><tbody>
+ <tr><td class="mono">VT001</td><td>Bơm tiêm 5ml</td><td>Cái</td><td class="num">200</td><td class="num">1.150</td><td class="num">230.000</td></tr>
+ <tr><td class="mono">VT002</td><td>Găng tay khám size M</td><td>Hộp</td><td class="num">10</td><td class="num">68.000</td><td class="num">680.000</td></tr>
+ <tr><td class="mono">VT005</td><td>Dây truyền dịch</td><td>Bộ</td><td class="num">50</td><td class="num">5.200</td><td class="num">260.000</td></tr>
+ <tr class="tot"><td colspan="5">Tổng cộng</td><td class="num">1.170.000 ₫</td></tr></tbody></table>
+ <div class="sign"><span>Người phát<br><i class="sm">(Ký, ghi rõ họ tên)</i></span><span>Người lĩnh<br><i class="sm">(Ký, ghi rõ họ tên)</i></span><span>P.VTTBYT<br><i class="sm">(Ký, ghi rõ họ tên)</i></span></div></div></div></div>
+ </div></div></section>
+<section id="c" class="dir dir-c" aria-labelledby="h-c">
+ <div class="wrap">
+ <header class="dh"><div><p class="tag">Hướng C</p><h2 id="h-c">Bàn giao ca</h2><p class="rat">Màn đầu là danh sách việc của ca, xếp theo hạn xử lý. Nền trắng ngà ánh xám, mực chàm đậm, hạn quá giờ nói thẳng bằng chữ.</p></div><div><div class="sws"><div class="sw"><i style="background:#1B1B4B"></i><span><b>Mực chàm</b> #1B1B4B</span></div><div class="sw"><i style="background:#F6F5F8"></i><span><b>Nền</b> #F6F5F8</span></div><div class="sw"><i style="background:#3E3A9E"></i><span><b>Chàm nhấn</b> #3E3A9E</span></div><div class="sw"><i style="background:#B45309"></i><span><b>Sắp hạn</b> #B45309</span></div><div class="sw"><i style="background:#B42318"></i><span><b>Quá hạn</b> #B42318</span></div><div class="sw"><i style="background:#DAD8E4"></i><span><b>Kẻ</b> #DAD8E4</span></div></div><div class="type"><p class="spec1">Phiếu lĩnh vật tư – ễ ặ ở ữ 1.250 12.500 ₫</p><p class="spec2">Bơm tiêm 5ml · Găng tay khám size M · Lô <span class="mono">BT2402</span> · HSD 20/11/2026</p><p class="sm muted">Be Vietnam Pro cho giao diện, Source Serif 4 cho bản in.</p></div></div></header>
+ <div class="grid">
+  <div class="cell span2"><h3>1. Khung ứng dụng và màn Thủ kho</h3><div class="shell"><nav class="side"><div class="brand"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-stack"/></svg><span>Kho VTYT</span></div><a href="#" class="on" aria-current="page"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-home"/></svg><span>Việc cần làm</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-doc"/></svg><span>Phiếu lĩnh</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-stack"/></svg><span>Tồn kho theo lô</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-in"/></svg><span>Nhập kho</span></a><a href="#" class="" ><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-chart"/></svg><span>Báo cáo XNT</span></a><div class="who"><b>Trần Văn Hùng</b><span>Thủ kho</span></div></nav><div class="mainp"><div class="top"><div class="scan"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-search"/></svg><input placeholder="Tìm phiếu, vật tư" aria-label="Tìm"></div><span class="shift">Ca sáng · Thứ Tư, 30/09/2026</span></div><section class="panel"><h4>Việc cần làm hôm nay</h4><p class="muted sm">3 việc, 1 việc quá hạn. Ca sáng bàn giao lúc 13:30.</p><ol class="queue"><li class="q over"><label class="cb"><input type="checkbox" aria-label="Đánh dấu PL-2026-0012 đã xong"></label><div class="qmain"><div class="qt"><span class="mono">PL-2026-0012</span> · Khoa Nội · 3 mặt hàng</div><div class="qs"><span class="badge b-wait"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-wait"/></svg>Chờ kho xác nhận</span><span class="sla over"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-warn"/></svg>quá hạn 2 giờ</span></div></div><button class="btn primary">Xác nhận</button></li><li class="q ok"><label class="cb"><input type="checkbox" aria-label="Đánh dấu PL-2026-0011 đã xong"></label><div class="qmain"><div class="qt"><span class="mono">PL-2026-0011</span> · Khoa Cấp cứu · 2 mặt hàng</div><div class="qs"><span class="badge b-wait"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-wait"/></svg>Chờ duyệt</span><span class="sla ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-clock"/></svg>còn 3 giờ</span></div></div><button class="btn ">Xem phiếu</button></li><li class="q ok"><label class="cb"><input type="checkbox" aria-label="Đánh dấu PL-2026-0010 đã xong"></label><div class="qmain"><div class="qt"><span class="mono">PL-2026-0010</span> · Khoa Ngoại · 4 mặt hàng</div><div class="qs"><span class="badge b-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-ok"/></svg>Đã duyệt</span><span class="sla ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-clock"/></svg>còn 1 ngày</span></div></div><button class="btn ">Cấp phát</button></li></ol>
+ <p class="muted sm">Sắp theo hạn xử lý. Xong việc nào, bấm ô tích để việc đó rời danh sách.</p></section></div></div></div>
+  <div class="cell span2"><h3>2. Bảng lô</h3><div class="tw"><table class="lots"><thead><tr><th>Mã</th><th>Vật tư</th><th>Số lô</th><th class="num">HSD</th><th class="num">Còn lại</th><th class="num">Tồn (ĐVT)</th><th>Bảo quản</th><th>Mức cảnh báo</th></tr></thead><tbody><tr class="lv0 "><td class="mono">VT001</td><td>Bơm tiêm 5ml</td><td><span class="mono">BT2409</span></td><td class="num">15/08/2027</td><td class="num">còn 319 ngày</td><td class="num">1.500</td><td>Phòng</td><td><span class="st st-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-check"/></svg>Bình thường</span></td></tr><tr class="lv1 "><td class="mono">VT001</td><td>Bơm tiêm 5ml</td><td><span class="mono">BT2402</span></td><td class="num">20/11/2026</td><td class="num">còn 51 ngày</td><td class="num">800</td><td>Phòng</td><td><span class="st st-warn"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-warn"/></svg>Cảnh báo</span></td></tr><tr class="lv2 "><td class="mono">VT002</td><td>Găng tay khám size M</td><td><span class="mono">GT2310</span></td><td class="num">12/10/2026</td><td class="num">còn 12 ngày</td><td class="num">25</td><td>Phòng</td><td><span class="st st-crit"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-crit"/></svg>Nghiêm trọng</span></td></tr></tbody></table></div></div>
+  <div class="cell"><h3>3. Badge trạng thái phiếu</h3><div class="badges"><span class="badge b-draft"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-draft"/></svg>Nháp</span><span class="badge b-wait"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-wait"/></svg>Chờ duyệt</span><span class="badge b-ok"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-ok"/></svg>Đã duyệt</span><span class="badge b-done"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-box"/></svg>Đã cấp phát</span><span class="badge b-no"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-no"/></svg>Từ chối</span></div><p class="sm muted">Mỗi trạng thái có hình riêng (nét đứt, đồng hồ, dấu tích, hộp, bát giác gạch chéo) nên vẫn đọc được khi in đen trắng.</p></div>
+  <div class="cell"><h3>4. Đăng nhập</h3><div class="login"><h4>Đăng nhập</h4><p class="muted">Kho Vật tư y tế – BV quận Phú Nhuận</p><label>Tên đăng nhập<input value="tranvanhung" readonly></label><label>Mật khẩu<input type="password" value="••••••••" readonly></label><label class="chk"><input type="checkbox" checked> Ghi nhớ</label><button class="btn primary">Đăng nhập</button><p class="err"><svg class="ic " aria-hidden="true" width="16" height="16"><use href="#i-crit"/></svg>Sai mật khẩu. Kiểm tra phím Caps Lock rồi thử lại.</p></div></div>
+  <div class="cell span2"><h3>5. Bản in A4, đen trắng</h3><div class="paper"><div class="a4"><div class="a4h"><div><b>Sở Y tế TP. Hồ Chí Minh</b><br><b>Bệnh viện quận Phú Nhuận</b><br><span class="sm">Kho Vật tư y tế</span></div><div class="r"><b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b><br>Độc lập – Tự do – Hạnh phúc</div></div>
+ <h5>CHỨNG TỪ XUẤT KHO</h5><p class="ctr">Số CTX: <span class="mono">CTX-2026-0012</span> · Ngày 30/09/2026<br>Theo phiếu lĩnh <span class="mono">PL-2026-0012</span> · Đơn vị nhận: Khoa Nội</p>
+ <table><thead><tr><th>Mã</th><th>Tên VTTHYT</th><th>ĐVT</th><th class="num">SL</th><th class="num">Đơn giá</th><th class="num">Thành tiền</th></tr></thead><tbody>
+ <tr><td class="mono">VT001</td><td>Bơm tiêm 5ml</td><td>Cái</td><td class="num">200</td><td class="num">1.150</td><td class="num">230.000</td></tr>
+ <tr><td class="mono">VT002</td><td>Găng tay khám size M</td><td>Hộp</td><td class="num">10</td><td class="num">68.000</td><td class="num">680.000</td></tr>
+ <tr><td class="mono">VT005</td><td>Dây truyền dịch</td><td>Bộ</td><td class="num">50</td><td class="num">5.200</td><td class="num">260.000</td></tr>
+ <tr class="tot"><td colspan="5">Tổng cộng</td><td class="num">1.170.000 ₫</td></tr></tbody></table>
+ <div class="sign"><span>Người phát<br><i class="sm">(Ký, ghi rõ họ tên)</i></span><span>Người lĩnh<br><i class="sm">(Ký, ghi rõ họ tên)</i></span><span>P.VTTBYT<br><i class="sm">(Ký, ghi rõ họ tên)</i></span></div></div></div></div>
+ </div></div></section>
+</main><section id="sosanh" class="wrap cmp"><h2>So sánh</h2><div class="tw"><table><thead><tr><th>Hướng</th><th>Điểm mạnh</th><th>Rủi ro</th><th>Kết luận</th></tr></thead><tbody>
+<tr class="rec"><td><b>A. Tem lô</b><br><span class="rectag">Đề xuất</span></td><td>Khớp nhất với nghiệp vụ lô, HSD và quét mã GS1. Dễ nhận ra nhất vì mỗi lô là một tem có thanh đếm ngược. Mật độ cao, một màu tín hiệu nên ít gây mỏi cảnh báo. Giữ nguyên dạng khi in đen trắng.</td><td>Mật độ cao cần kỷ luật về khoảng cách chữ. Hổ phách trên nền trắng phải dùng bản tối cho chữ để đủ tương phản. Cần kiểm thử thanh đếm ngược ở 12px.</td><td>Chọn nếu ưu tiên kiểm soát hạn dùng và thao tác quét.</td></tr>
+<tr><td><b>B. Chuỗi lạnh</b></td><td>Điều kiện bảo quản nhìn thấy ngay trên từng dòng. Giao diện bình tĩnh, giống thiết bị đo. Phù hợp nếu kho có nhiều hóa chất và hàng lạnh.</td><td>Dải nhiệt độ chỉ có 3 bậc nên ít giá trị khi phần lớn hàng là Phòng. Xanh lam dễ thành giao diện chung chung. Dải màu cạnh tranh với màu cảnh báo HSD.</td><td>Chọn nếu hàng Mát và Lạnh chiếm phần lớn.</td></tr>
+<tr><td><b>C. Bàn giao ca</b></td><td>Màn đầu trả lời đúng câu hỏi làm gì bây giờ. Hạn xử lý (SLA) rõ cho từng vai trò. Bản in dùng chữ có chân, nghiêm túc như chứng từ giấy.</td><td>Ít nét riêng ở bảng lô, dễ giống công cụ quản lý việc nói chung. Cần dữ liệu hạn xử lý chính xác, nếu không bộ đếm "quá hạn" gây nhiễu.</td><td>Chọn nếu điểm đau chính là phiếu bị chậm.</td></tr>
+</tbody></table></div></section><footer class="wrap sm muted foot">Tệp này chỉ là bản so sánh hướng thiết kế. Chưa commit.</footer></body></html>
