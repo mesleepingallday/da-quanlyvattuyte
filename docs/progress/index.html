@@ -1,0 +1,74 @@
+<title>Redesign VTYT Kho</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap&subset=vietnamese">
+<style>
+/* Layout: one reading column; phases as a vertical ledger of steps with status chips */
+:root{--bg:#F6F6F4;--panel:#FFFFFF;--ink:#16181B;--muted:#62666D;--rule:#E1E2E0;--accent:#8A5A00;--accent-bg:#FFF3D1;--ok:#1E6B3A;--ok-bg:#E3F2E8;--wait:#62666D;--wait-bg:#EEEEEC;
+--sans:"Be Vietnam Pro",system-ui,"Segoe UI",Arial,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E0F11;--panel:#16181B;--ink:#ECEDEE;--muted:#9A9FA7;--rule:#26292E;--accent:#F2A900;--accent-bg:#2B2210;--ok:#6CCB8D;--ok-bg:#13261A;--wait:#9A9FA7;--wait-bg:#1F2226;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E0F11;--panel:#16181B;--ink:#ECEDEE;--muted:#9A9FA7;--rule:#26292E;--accent:#F2A900;--accent-bg:#2B2210;--ok:#6CCB8D;--ok-bg:#13261A;--wait:#9A9FA7;--wait-bg:#1F2226;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);padding-inline:16px;padding-block:40px 64px}
+.wrap{max-width:760px;margin:0 auto;display:grid;gap:32px}
+h1{font-size:30px;line-height:1.2;margin:0;text-wrap:balance}
+h2{font-size:18px;margin:0 0 12px}
+p{margin:0}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono);font-size:13px}
+header{display:grid;gap:8px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted)}
+.bar{height:6px;background:var(--rule);border-radius:3px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
+ol.steps{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.steps li{display:grid;grid-template-columns:28px 1fr auto;gap:12px;padding:14px 0;border-bottom:1px solid var(--rule);align-items:start}
+.steps .n{font-family:var(--mono);color:var(--muted);font-size:13px;padding-top:2px}
+.steps b{font-weight:600}.steps .d{font-size:14px;color:var(--muted);margin-top:2px}
+.steps a{color:var(--ink);text-underline-offset:3px}
+.chip{font-size:12px;font-weight:600;padding:2px 10px;border-radius:999px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.done{color:var(--ok);background:var(--ok-bg)}.now{color:var(--accent);background:var(--accent-bg)}.next{color:var(--wait);background:var(--wait-bg)}
+.next::before{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:20px;display:grid;gap:10px}
+ul.plain{margin:0;padding-left:18px;display:grid;gap:4px}
+.dec{display:grid;grid-template-columns:140px 1fr;gap:6px 16px;font-size:14px}.dec dt{color:var(--muted)}.dec dd{margin:0}
+@media (max-width:520px){.steps li{grid-template-columns:24px 1fr}.steps .chip{grid-column:2;justify-self:start}.dec{grid-template-columns:1fr}.dec dd{margin-bottom:6px}}
+</style>
+<div class="wrap">
+<header>
+ <h1>Redesign Kho Vật tư y tế</h1>
+ <p class="muted">Theo dõi tiến độ thiết kế lại giao diện. Cập nhật mỗi khi xong một bước.</p>
+ <div class="meta"><span>Nhánh <span class="mono">claude/busy-thompson-ao1gb1</span></span><span>Cập nhật 30/09/2026</span></div>
+ <div class="bar" role="img" aria-label="Hoàn thành 2 trên 6 bước"><i style="width:40%"></i></div>
+</header>
+
+<section>
+ <h2>Các bước</h2>
+ <ol class="steps">
+  <li><span class="n">1</span><div><b>Nghiên cứu UX y tế và healthtech</b><p class="d">10 quy tắc: bảng dày thông tin, 3 tầng cảnh báo, không dùng màu làm tín hiệu duy nhất, ưu tiên quét mã. Tệp <span class="mono">docs/ui/research/healthtech-ux-research.md</span>.</p></div><span class="chip done">Xong</span></li>
+  <li><span class="n">2</span><div><b>So sánh 3 hướng thiết kế</b><p class="d">A Tem lô, B Chuỗi lạnh, C Bàn giao ca. Đã chọn <b>A</b>. <a href="https://claude.ai/artifact/FtsCuEnYZH4Shmepo6gdQ2">Xem bảng so sánh</a>.</p></div><span class="chip done">Xong</span></li>
+  <li><span class="n">3</span><div><b>Prototype v2: "Tem lô, dark"</b><p class="d">Lấy cảm hứng từ dashboard quản lý tệp tối màu. Tổng quan với thẻ lô sắp hết hạn dạng tem GS1, bảng phiếu lĩnh nhóm theo khoa, tồn kho theo lô, drawer chi tiết phiếu. Tệp <span class="mono">docs/prototype-v2/</span>.</p></div><span class="chip now">Đang làm</span></li>
+  <li><span class="n">4</span><div><b>Góp ý và chỉnh giao diện</b><p class="d">Bạn xem prototype, góp ý; sau đó dựng thêm 9 màn còn lại theo cùng phong cách.</p></div><span class="chip next">Tiếp theo</span></li>
+  <li><span class="n">5</span><div><b>Case study cho portfolio</b><p class="d">Vấn đề, nghiên cứu, 3 hướng và lý do chọn, luồng chính, trước/sau, quyết định về an toàn và truy cập.</p></div><span class="chip next">Tiếp theo</span></li>
+  <li><span class="n">6</span><div><b>Chuyển sang Nuxt 4 + Nuxt UI</b><p class="d">Dựng app thật từ prototype đã duyệt, dữ liệu mẫu trước, SQLite sau.</p></div><span class="chip next">Tiếp theo</span></li>
+ </ol>
+</section>
+
+<section class="card">
+ <h2>Quyết định đã chốt</h2>
+ <dl class="dec">
+  <dt>Hướng</dt><dd>A "Tem lô", phiên bản tối, cảm hứng từ dashboard Filenns</dd>
+  <dt>Màu nhấn</dt><dd>Một màu hổ phách an toàn; xanh lá chỉ cho "Đã cấp phát", đỏ chỉ cho lô hết hạn</dd>
+  <dt>Chữ</dt><dd>Be Vietnam Pro cho giao diện, IBM Plex Mono cho số lô và số phiếu</dd>
+  <dt>Cách làm</dt><dd>Bước đầu thoải mái, không cần khớp từng dòng trong các tệp .md cũ</dd>
+  <dt>Thực hiện</dt><dd>Worker Sonnet dựng, Claude soát và commit</dd>
+ </dl>
+</section>
+
+<section class="card">
+ <h2>Tệp trong repo</h2>
+ <ul class="plain mono">
+  <li>docs/ui/research/healthtech-ux-research.md</li>
+  <li>docs/ui/directions/index.html</li>
+  <li>docs/prototype-v2/ (đang dựng)</li>
+  <li>docs/ui/archive/ (bản v1 cũ)</li>
+ </ul>
+</section>
+</div>
