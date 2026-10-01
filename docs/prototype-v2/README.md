@@ -1,5 +1,7 @@
 # Kho VTYT – bản mẫu giao diện v2
 
+Đây là bản tham chiếu tĩnh. Ứng dụng Nuxt UI dựng từ bản này nằm ở thư mục gốc repo (`bun run dev`).
+
 Bản mẫu tĩnh (HTML + CSS + JS thuần, không cần build) cho hệ thống quản lý vật tư y tế, BV quận Phú Nhuận.
 
 ## Cách chạy
@@ -8,9 +10,9 @@ Chọn một trong ba cách:
 
 1. Dùng live-server (tự tải lại khi sửa file), chạy ở thư mục gốc repo:
    ```
-   npm install && npm run dev
+   bun install && bun run proto
    ```
-   Mở http://localhost:5173
+   Mở http://localhost:5174 (cổng 5173 và 3000 để cho ứng dụng Nuxt `bun run dev`)
 2. Dùng Python:
    ```
    python3 -m http.server 5173 -d docs/prototype-v2
