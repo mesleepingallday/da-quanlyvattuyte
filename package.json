@@ -1,0 +1,27 @@
+{
+  "name": "vtyt-kho",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "proto": "live-server docs/prototype-v2 --port=5174 --no-browser"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "typescript": "^5.9",
+    "vue-tsc": "^3.3.11"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.138",
+    "@nuxt/ui": "^4.11.2",
+    "@tanstack/vue-table": "^8.21.3",
+    "@vueuse/nuxt": "^15.0.0",
+    "nuxt": "^4.5.2",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.5"
+  }
+}
