@@ -5,7 +5,7 @@ Mục tiêu: thiết kế bám sát component có sẵn của Nuxt UI (v4, bản
 ## Điểm xuất phát
 - **Template code:** `nuxt-ui-templates/dashboard`, khởi tạo bằng `npx nuxi init -t ui/dashboard`. Template có sẵn sidebar thu gọn được, panel, navbar, bảng (TanStack), trang cài đặt, thông báo, chế độ tối.
 - **Figma:** bộ Nuxt UI Figma Kit trên Figma Community. Vẽ bằng đúng component trong kit này thì code ra sẽ khớp.
-- **Theme (theo prototype v2 "Tem lô dark", đã áp dụng trong `app/`):** chỉ đổi token, không sửa component:
+- **Theme hiện tại là v3, xem `docs/ui/redesign-v3.md` và `app/app.config.ts`.** Phần dưới đây mô tả theme v2 "Tem lô dark" cũ, giữ để tham khảo:
   - `app.config.ts`: `ui.colors` primary `amber` (#F2A900), neutral `zinc`, success `green`, info `slate`, warning `amber`, error `red`.
   - `nuxt.config.ts`: `colorMode.preference = 'dark'`, `ssr: false`; `fonts.families` Be Vietnam Pro (400-700) và IBM Plex Mono (400-600), subset `vietnamese`, `latin`, `latin-ext`.
   - `app/assets/css/main.css`: `@theme static` đặt `--font-sans`/`--font-mono`; khối `.dark` ghi đè `--ui-bg*` (#0B0D0F / #121519 / #181C21 / #1D2228), `--ui-border*` (#252A31 / #323943), `--ui-text*` (#ECEDEE / #9BA1A9 / #808892), `--ui-primary` #F2A900, success #3FB97B, error #F26C65, info #8FA3BF.

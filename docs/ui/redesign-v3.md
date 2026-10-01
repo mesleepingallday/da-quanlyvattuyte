@@ -1,6 +1,6 @@
 # Thiết kế lại v3: "Kho VTYT" kiểu Apple
 
-Trạng thái: đang làm trên nhánh `redesign/v3` · bắt đầu 01/10/2026
+Trạng thái: bản dựng đầy đủ trên nhánh `redesign/v3`, 01/10/2026. Chạy: `bun install && bun run dev`, mở http://localhost:3000.
 
 v3 thay hướng "Tem lô dark" (prototype v2). Bản v2 vẫn giữ ở `docs/prototype-v2/` và commit đầu tiên của nhánh này làm mốc so sánh.
 
@@ -36,9 +36,9 @@ v3 thay hướng "Tem lô dark" (prototype v2). Bản v2 vẫn giữ ở `docs/p
 | Bề mặt | `#FFFFFF` | `#1C1C1E` | Nhóm danh sách, bảng trượt, hộp thoại |
 | Ô ảnh | `#F2F2F5` | `#2C2C2E` | Nền sau ảnh vật tư |
 | Mực | `#1D1D1F` | `#F5F5F7` | Chữ chính |
-| Chì | `#6E6E73` | `#98989D` | Chữ phụ |
+| Chì | `#67676C` | `#A1A1A6` | Chữ phụ (đậm hơn xám Apple một chút để đạt 4,5:1 trên nền xám) |
 | Kẻ | `#E3E3E8` | `#38383A` | Đường phân cách |
-| Xanh dược (tint) | `#0B7A55` | `#3DD39A` (chữ) / `#138A5E` (nền nút) | Nút chính, liên kết, bước đã xong |
+| Xanh dược (tint) | `#0B7A55` | `#3DD39A` (chữ) / `#11845A` (nền nút) | Nút chính, liên kết, bước đã xong |
 
 Màu ngữ nghĩa (chữ dùng sắc đậm để đạt AA trên nền trắng):
 
@@ -119,3 +119,33 @@ Máy tính (≥1024px)                          Điện thoại (<1024px)
 | Trạng thái "đến lượt bạn" là nút hành động trên dòng | Người dùng biết phải làm gì mà không cần đọc nhãn |
 | Đã cấp phát hiện màu yên (dấu tích), không tô xanh cả dòng | Việc đã xong không cần giành sự chú ý |
 | Ảnh sản phẩm là điểm nhấn duy nhất | Có công dụng (nhận dạng, tránh lấy nhầm cỡ) và làm sản phẩm trông hoàn thiện |
+
+## 8. Trước và sau
+
+| Trước (v2) | Sau (v3) |
+|---|---|
+| ![v2 máy tính](redesign-v3/00-truoc-v2-d.png) | ![v3 Hôm nay, thủ kho](redesign-v3/03-hom-nay-thu-kho-d.png) |
+| ![v2 điện thoại](redesign-v3/00-truoc-v2-m.png) | ![v3 Hôm nay, điều dưỡng](redesign-v3/04-hom-nay-dieu-duong-m.png) |
+
+Các màn khác trong `docs/ui/redesign-v3/`: đăng nhập, chào mừng, phiếu lĩnh chia đôi, lập phiếu, cấp phát, tồn kho (tối), nhập kho, báo cáo.
+
+## 9. Trình diễn
+
+Đường dẫn vào thẳng một vai trò (bỏ qua màn chào mừng bằng `chao=0`, chọn giao diện bằng `giao-dien=toi|sang`):
+
+| Vai trò | Đường dẫn |
+|---|---|
+| ĐD khoa Nội | `/dang-nhap?nguoi=lan&chao=0` |
+| Trưởng khoa Nội | `/dang-nhap?nguoi=binh&chao=0` |
+| Thủ kho | `/dang-nhap?nguoi=hung&chao=0` |
+| Trưởng P.VTTBYT | `/dang-nhap?nguoi=hanh&chao=0` |
+| Kế toán dược | `/dang-nhap?nguoi=tuan&chao=0` |
+
+Kịch bản 5 phút theo `thiet-ke-ui.md`: Lan lập phiếu (lĩnh lại như PL-2026-0114) → Bình duyệt → Hùng xác nhận → Hạnh duyệt → Hùng cấp phát (quét `BT2402`) và in chứng từ → báo cáo xuất – nhập – tồn tháng 9 đã có số vừa xuất. Mật khẩu mẫu: `123456`. Trang Tài khoản có nút đặt lại dữ liệu mẫu.
+
+## 10. Kiểm chứng
+
+- `bun run typecheck` và `bun run build` qua.
+- axe-core (WCAG 2.1 A/AA và best-practice) trên 22 màn, sáng và tối: 0 lỗi.
+- Màu biểu đồ qua bộ kiểm `validate_palette` (dải sáng, độ bão hòa, tương phản ≥ 3:1) ở cả hai chế độ.
+- Chụp màn bằng giả lập thiết bị (390, 834, 1280 và 1440 px): không tràn ngang.

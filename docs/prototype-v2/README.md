@@ -1,6 +1,6 @@
 # Kho VTYT – bản mẫu giao diện v2
 
-Đây là bản tham chiếu tĩnh. Ứng dụng Nuxt UI dựng từ bản này nằm ở thư mục gốc repo (`bun run dev`).
+Lưu trữ. Giao diện hiện tại là v3 (xem `docs/ui/redesign-v3.md`); bản này giữ lại để so sánh trước/sau.
 
 Bản mẫu tĩnh (HTML + CSS + JS thuần, không cần build) cho hệ thống quản lý vật tư y tế, BV quận Phú Nhuận.
 
