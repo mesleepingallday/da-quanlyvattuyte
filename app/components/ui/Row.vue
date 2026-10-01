@@ -33,7 +33,7 @@ const interactive = computed(() => !!props.to || props.button)
     :class="[
       dense ? 'min-h-12 py-2.5' : 'min-h-15 py-3',
       interactive && 'cursor-pointer transition-colors hover:bg-(--fill)/60 active:bg-(--fill)',
-      selected && 'bg-primary/10 hover:bg-primary/12'
+      selected && 'bg-primary/8 hover:bg-primary/12'
     ]"
     :style="{ '--sep': `${inset}px` }"
     :aria-current="selected ? 'page' : undefined"

@@ -99,6 +99,8 @@
 
   --tint-fill: #0B7A55;
   --tint-fill-hover: #096A4A;
+  /* Small tint text on grey fills (tab labels) needs a deeper step to keep 4.5:1 */
+  --tint-strong: #096A4A;
   --danger-fill: #D70015;
   --danger-fill-hover: #BC0012;
 
@@ -130,7 +132,7 @@
   --ui-border-accented: #D2D2D7;
   --ui-border-inverted: #1D1D1F;
   --ui-text-dimmed: #7C7C80;
-  --ui-text-muted: #6E6E73;
+  --ui-text-muted: #67676C;
   --ui-text-toned: #48484A;
   --ui-text: #1D1D1F;
   --ui-text-highlighted: #1D1D1F;
@@ -151,6 +153,7 @@
 
   --tint-fill: #11845A;
   --tint-fill-hover: #149463;
+  --tint-strong: #3DD39A;
   --danger-fill: #E0281F;
   --danger-fill-hover: #EC3A30;
 
@@ -179,8 +182,8 @@
   --ui-border-muted: #2C2C2E;
   --ui-border-accented: #48484A;
   --ui-border-inverted: #F5F5F7;
-  --ui-text-dimmed: #7C7C80;
-  --ui-text-muted: #98989D;
+  --ui-text-dimmed: #8A8A8E;
+  --ui-text-muted: #A1A1A6;
   --ui-text-toned: #C7C7CC;
   --ui-text: #F5F5F7;
   --ui-text-highlighted: #FFFFFF;
@@ -211,8 +214,9 @@ body {
 
 ::selection { background: color-mix(in oklab, var(--ui-primary) 28%, transparent); }
 
-/* Form fields draw their own focus ring (Nuxt UI, or the grouped login rows) */
-:where(a, button, [role='button'], summary, [tabindex]:not(input, textarea, select)):focus-visible {
+/* Form fields draw their own focus ring (Nuxt UI, or the grouped login rows); so do
+   stretched row links, which opt out with .outline-none and ring the whole row instead */
+:where(a, button, [role='button'], summary, [tabindex]:not(input, textarea, select)):focus-visible:not(.outline-none) {
   outline: 2px solid var(--ui-primary);
   outline-offset: 2px;
 }

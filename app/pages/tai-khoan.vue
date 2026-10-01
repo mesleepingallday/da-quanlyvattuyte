@@ -128,7 +128,7 @@ function logout() {
         </UiRow>
       </div>
 
-      <p class="text-center text-footnote text-dimmed">
+      <p class="text-center text-footnote text-muted">
         Kho VTYT 3.0, Bệnh viện quận Phú Nhuận
       </p>
     </div>

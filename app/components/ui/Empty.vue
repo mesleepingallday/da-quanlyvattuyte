@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /** Empty state: says what is (not) here and offers the next action. */
-defineProps<{ icon: string, title: string, description?: string, compact?: boolean }>()
+withDefaults(defineProps<{ icon: string, title: string, description?: string, compact?: boolean, heading?: 'h1' | 'h2' | 'p' }>(), { heading: 'p' })
 </script>
 
 <template>
@@ -8,9 +8,9 @@ defineProps<{ icon: string, title: string, description?: string, compact?: boole
     <div class="mb-4 flex size-16 items-center justify-center rounded-full bg-(--fill)">
       <UIcon :name="icon" class="size-8 text-muted" aria-hidden="true" />
     </div>
-    <p class="text-headline text-highlighted">
+    <component :is="heading" class="text-headline text-highlighted">
       {{ title }}
-    </p>
+    </component>
     <p v-if="description" class="mt-1 max-w-sm text-callout text-muted">
       {{ description }}
     </p>

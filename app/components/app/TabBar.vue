@@ -15,7 +15,7 @@ const { items, isActive, primary } = useNav()
           :key="item.key"
           :to="item.to"
           class="relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-full px-1 pt-1.5 pb-1 text-[10.5px]/[13px] font-semibold transition-colors"
-          :class="isActive(item.to) ? 'bg-(--fill) text-primary' : 'text-toned'"
+          :class="isActive(item.to) ? 'bg-(--fill) text-(--tint-strong)' : 'text-toned'"
           :aria-current="isActive(item.to) ? 'page' : undefined"
         >
           <AppNavIcon :name="item.icon" class="size-6" />

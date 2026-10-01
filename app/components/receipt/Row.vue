@@ -18,7 +18,7 @@ const supplier = computed(() => props.receipt.ncc.replace(/^Công ty (CP|TNHH)\s
 <template>
   <div
     class="relative flex min-w-0 items-center gap-3 px-4 py-3 transition-colors after:pointer-events-none after:absolute after:right-0 after:bottom-0 after:left-[86px] after:h-px after:bg-(--hairline) last:after:hidden has-[a:hover]:bg-(--fill)/50 has-[a:active]:bg-(--fill)"
-    :class="selected && 'bg-primary/10 has-[a:hover]:bg-primary/12'"
+    :class="selected && 'bg-primary/8 has-[a:hover]:bg-primary/12'"
   >
     <ItemThumbs :mas="receipt.lines.map(l => l.ma)" :size="44" />
     <div class="min-w-0 flex-1">

@@ -135,6 +135,22 @@ export default defineAppConfig({
         label: 'px-2.5 py-1.5 text-[13px] font-semibold text-muted'
       }
     },
+    // Alerts tint the surface instead of the page, so text keeps AA contrast wherever they sit
+    alert: {
+      slots: {
+        root: 'rounded-2xl',
+        title: 'text-[15px]/5 lg:text-sm font-semibold',
+        description: 'opacity-100 text-[15px]/5 lg:text-sm'
+      },
+      compoundVariants: [
+        { color: 'primary', variant: 'subtle', class: { root: 'bg-[color-mix(in_oklab,var(--ui-primary)_7%,var(--ui-bg))] ring-[color-mix(in_oklab,var(--ui-primary)_22%,transparent)]' } },
+        { color: 'success', variant: 'subtle', class: { root: 'bg-[color-mix(in_oklab,var(--ui-success)_7%,var(--ui-bg))] ring-[color-mix(in_oklab,var(--ui-success)_22%,transparent)]' } },
+        { color: 'info', variant: 'subtle', class: { root: 'bg-[color-mix(in_oklab,var(--ui-info)_7%,var(--ui-bg))] ring-[color-mix(in_oklab,var(--ui-info)_22%,transparent)]' } },
+        { color: 'warning', variant: 'subtle', class: { root: 'bg-[color-mix(in_oklab,var(--ui-warning)_7%,var(--ui-bg))] ring-[color-mix(in_oklab,var(--ui-warning)_22%,transparent)]' } },
+        { color: 'error', variant: 'subtle', class: { root: 'bg-[color-mix(in_oklab,var(--ui-error)_7%,var(--ui-bg))] ring-[color-mix(in_oklab,var(--ui-error)_22%,transparent)]' } },
+        { color: 'neutral', variant: 'subtle', class: { root: 'bg-default text-default ring-(--hairline)' } }
+      ]
+    },
     kbd: {
       base: 'rounded-md font-sans normal-case'
     },

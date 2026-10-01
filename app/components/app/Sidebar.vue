@@ -20,7 +20,7 @@ const { role } = useSession()
     <div class="px-3">
       <button
         type="button"
-        class="flex h-10 w-full items-center gap-2.5 rounded-xl bg-(--fill) px-3 text-[15px] text-dimmed transition-colors hover:bg-(--fill-strong)"
+        class="flex h-10 w-full items-center gap-2.5 rounded-xl bg-(--fill) px-3 text-[15px] text-muted transition-colors hover:bg-(--fill-strong)"
         @click="searchOpen = true"
       >
         <UIcon name="i-lucide-search" class="size-[18px]" aria-hidden="true" />

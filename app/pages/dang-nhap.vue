@@ -117,7 +117,7 @@ function submit() {
       </div>
     </section>
 
-    <p class="mt-10 text-center text-footnote text-dimmed">
+    <p class="mt-10 text-center text-footnote text-muted">
       Bản thử nghiệm 3.0, dùng dữ liệu mẫu.
     </p>
   </div>

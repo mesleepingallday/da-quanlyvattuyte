@@ -132,7 +132,7 @@ function sendPlan() {
                   <td class="px-3 text-right text-default tabular">
                     {{ nf(r.dau) }}
                   </td>
-                  <td class="px-3 text-right tabular" :class="r.nhap ? 'text-default' : 'text-dimmed'">
+                  <td class="px-3 text-right tabular" :class="r.nhap ? 'text-default' : 'text-muted'">
                     {{ r.nhap ? nf(r.nhap) : '–' }}
                   </td>
                   <td class="px-3 text-right text-default tabular">
@@ -264,7 +264,7 @@ function sendPlan() {
                   <td class="px-3 text-right tabular">
                     {{ nf(p.cuoi) }}
                   </td>
-                  <td class="px-3 text-right tabular" :class="p.goiY ? 'text-default' : 'text-dimmed'">
+                  <td class="px-3 text-right tabular" :class="p.goiY ? 'text-default' : 'text-muted'">
                     {{ p.goiY ? nf(p.goiY) : 'Không cần' }}
                   </td>
                   <td class="py-2 ps-3 pe-4 text-right">

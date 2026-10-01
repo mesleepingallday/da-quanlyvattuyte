@@ -26,11 +26,11 @@ const index = computed(() => Math.max(0, props.options.findIndex(o => o.value ==
       v-for="o in options"
       :key="o.value"
       class="relative z-10 flex min-w-0 cursor-pointer items-center justify-center gap-1.5 rounded-full text-center font-semibold whitespace-nowrap transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary"
-      :class="[size === 'sm' ? 'h-7 px-2.5 text-[13px]' : 'h-8 px-3 text-[14px]', model === o.value ? 'text-highlighted' : 'text-muted hover:text-default']"
+      :class="[size === 'sm' ? 'h-7 px-2.5 text-[13px]' : 'h-8 px-3 text-[14px]', model === o.value ? 'text-highlighted' : 'text-toned hover:text-highlighted']"
     >
       <input v-model="model" type="radio" class="sr-only" :name="name" :value="o.value">
       <span class="truncate">{{ o.label }}</span>
-      <span v-if="o.count" class="tabular text-[12px] font-semibold" :class="model === o.value ? 'text-muted' : 'text-dimmed'">{{ o.count }}</span>
+      <span v-if="o.count" class="tabular text-[12px] font-semibold" :class="model === o.value ? 'text-muted' : 'text-toned'">{{ o.count }}</span>
     </label>
   </div>
 </template>

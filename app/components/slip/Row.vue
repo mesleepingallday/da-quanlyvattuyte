@@ -20,7 +20,7 @@ const mas = computed(() => props.slip.lines.map(l => l.ma))
 <template>
   <div
     class="group/row relative flex min-w-0 items-center gap-3 px-4 py-3 transition-colors after:pointer-events-none after:absolute after:right-0 after:bottom-0 after:left-[86px] after:h-px after:bg-(--hairline) last:after:hidden has-[a:hover]:bg-(--fill)/50 has-[a:active]:bg-(--fill)"
-    :class="selected && 'bg-primary/10 has-[a:hover]:bg-primary/12'"
+    :class="selected && 'bg-primary/8 has-[a:hover]:bg-primary/12'"
   >
     <UCheckbox
       v-if="selectable"
