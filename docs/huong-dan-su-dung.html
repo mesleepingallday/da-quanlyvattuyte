@@ -1,0 +1,839 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hướng dẫn Kho VTYT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+/* Bố cục: mục lục dính bên trái (máy tính) + một cột đọc ~720px; điện thoại: một cột, mục lục thu gọn ở đầu trang.
+   Màu và chữ lấy theo hệ thiết kế v3 của ứng dụng (docs/ui/redesign-v3.md) để người đọc thấy giống hệt màn hình thật. */
+:root {
+  --bg: #F5F5F7;
+  --surface: #FFFFFF;
+  --well: #F2F2F5;
+  --ink: #1D1D1F;
+  --lead: #67676C;
+  --rule: #E3E3E8;
+  --tint: #0B7A55;
+  --tint-btn: #0B7A55;
+  --tint-soft: rgba(11, 122, 85, .10);
+  --on-tint: #FFFFFF;
+  --crit: #D70015;
+  --crit-dot: #FF3B30;
+  --crit-soft: rgba(255, 59, 48, .10);
+  --warn: #B25000;
+  --warn-dot: #FF9500;
+  --warn-soft: rgba(255, 149, 0, .12);
+  --cold: #0071A4;
+  --cold-dot: #32ADE6;
+  --cold-soft: rgba(50, 173, 230, .12);
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --font: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --r-group: 20px;
+  --r-input: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #000000; --surface: #1C1C1E; --well: #2C2C2E; --ink: #F5F5F7; --lead: #A1A1A6; --rule: #38383A;
+    --tint: #3DD39A; --tint-btn: #11845A; --tint-soft: rgba(61, 211, 154, .14); --on-tint: #FFFFFF;
+    --crit: #FF6961; --crit-soft: rgba(255, 105, 97, .16); --warn: #FFB340; --warn-soft: rgba(255, 179, 64, .16);
+    --cold: #70D7FF; --cold-soft: rgba(112, 215, 255, .14); --shadow: none; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #000000; --surface: #1C1C1E; --well: #2C2C2E; --ink: #F5F5F7; --lead: #A1A1A6; --rule: #38383A;
+  --tint: #3DD39A; --tint-btn: #11845A; --tint-soft: rgba(61, 211, 154, .14); --on-tint: #FFFFFF;
+  --crit: #FF6961; --crit-soft: rgba(255, 105, 97, .16); --warn: #FFB340; --warn-soft: rgba(255, 179, 64, .16);
+  --cold: #70D7FF; --cold-soft: rgba(112, 215, 255, .14); --shadow: none; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 400 16px/1.6 var(--font); -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--tint); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--tint); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 5vw, 40px); line-height: 1.15; font-weight: 700; letter-spacing: -.022em; }
+h2 { font-size: 24px; line-height: 1.25; font-weight: 700; letter-spacing: -.012em; }
+h3 { font-size: 18px; line-height: 1.35; font-weight: 600; }
+p { margin: 0; }
+.tab { font-variant-numeric: tabular-nums; }
+.muted { color: var(--lead); }
+.small { font-size: 14px; line-height: 1.5; }
+
+/* ---------- Khung trang ---------- */
+.shell {
+  max-width: 1120px; margin: 0 auto; padding-inline: 16px; padding-block: 32px 80px;
+  display: grid; grid-template-columns: 1fr; gap: 32px;
+}
+@media (min-width: 1000px) {
+  .shell { grid-template-columns: 240px minmax(0, 1fr); gap: 56px; padding-inline: 32px; }
+}
+main { min-width: 0; max-width: 760px; display: grid; gap: 64px; }
+section { display: grid; gap: 20px; min-width: 0; }
+.lede { font-size: 18px; line-height: 1.6; color: var(--lead); max-width: 62ch; }
+.prose { display: grid; gap: 12px; max-width: 68ch; }
+
+/* ---------- Mục lục ---------- */
+nav.toc { position: relative; }
+.toc-inner { display: grid; gap: 4px; }
+@media (min-width: 1000px) {
+  .toc-inner { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); }
+}
+.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.brand-mark {
+  width: 40px; height: 40px; border-radius: 11px; background: var(--tint-btn); color: var(--on-tint);
+  display: grid; place-items: center; flex: none;
+}
+.brand b { display: block; font-size: 15px; line-height: 1.2; }
+.brand span { font-size: 13px; color: var(--lead); }
+.toc a {
+  display: block; padding: 6px 12px; border-radius: 10px; color: var(--ink); text-decoration: none; font-size: 15px;
+}
+.toc a:hover { background: var(--surface); }
+.toc a.on { background: var(--tint-soft); color: var(--tint); font-weight: 600; }
+.toc details { background: var(--surface); border-radius: var(--r-group); padding: 4px 8px; }
+.toc details > summary { padding: 10px 8px; font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; }
+.toc details > summary::-webkit-details-marker { display: none; }
+.toc details > summary::after { content: "▾"; color: var(--lead); }
+.toc details[open] > summary::after { content: "▴"; }
+.toc details .links { padding-bottom: 8px; display: grid; gap: 2px; }
+@media (min-width: 1000px) {
+  .toc details { background: transparent; padding: 0; }
+  .toc details > summary { display: none; }
+}
+
+/* ---------- Nhóm (thẻ kiểu iOS) ---------- */
+.group { background: var(--surface); border-radius: var(--r-group); overflow: hidden; }
+.group > .row { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; }
+.group > .row + .row { border-top: 1px solid var(--rule); }
+.row .ico {
+  width: 36px; height: 36px; border-radius: 10px; flex: none; display: grid; place-items: center;
+  background: var(--tint-soft); color: var(--tint);
+}
+.row .body { min-width: 0; display: grid; gap: 2px; }
+.row .body b { font-weight: 600; }
+.row .body p { color: var(--lead); font-size: 15px; }
+
+svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Mô phỏng nút & trạng thái trong ứng dụng ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 4px; padding: 1px 11px; border-radius: 999px;
+  background: var(--tint-btn); color: var(--on-tint); font-size: 14px; font-weight: 600; line-height: 1.6;
+  white-space: nowrap; vertical-align: baseline;
+}
+.btn.soft { background: var(--well); color: var(--ink); }
+.btn.danger { background: var(--crit-soft); color: var(--crit); }
+.key { display: inline-block; padding: 0 7px; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 6px; font-size: 13px; background: var(--surface); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; white-space: nowrap; }
+.pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.pill.wait { color: var(--warn); }
+.pill.ok { color: var(--tint); }
+.pill.crit { color: var(--crit); }
+.pill.draft { color: var(--lead); }
+.pill.cold { color: var(--cold); }
+
+/* ---------- Bắt đầu nhanh ---------- */
+.start { display: grid; gap: 12px; counter-reset: s; }
+@media (min-width: 640px) { .start { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.start li { list-style: none; background: var(--surface); border-radius: var(--r-group); padding: 18px; display: grid; gap: 6px; align-content: start; }
+.start li::before {
+  counter-increment: s; content: counter(s); width: 28px; height: 28px; border-radius: 50%;
+  background: var(--tint-btn); color: var(--on-tint); display: grid; place-items: center; font-weight: 700; font-size: 14px;
+}
+.start { padding: 0; margin: 0; }
+
+/* ---------- Chọn vai trò ---------- */
+.roles { display: flex; flex-wrap: wrap; gap: 8px; }
+.roles button {
+  font: inherit; font-size: 15px; font-weight: 500; border: 1px solid var(--rule); background: var(--surface); color: var(--ink);
+  padding: 8px 16px; border-radius: 999px; cursor: pointer;
+}
+.roles button[aria-selected="true"] { background: var(--tint-btn); border-color: var(--tint-btn); color: var(--on-tint); }
+.role-card { background: var(--surface); border-radius: var(--r-group); padding: 20px; display: grid; gap: 16px; }
+.role-head { display: flex; gap: 14px; align-items: center; }
+.avatar { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #fff; flex: none; }
+.role-head p { color: var(--lead); font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 13px; font-weight: 500; padding: 3px 10px; border-radius: 999px; background: var(--well); color: var(--ink); }
+.role-card ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.role-card .login { font-size: 14px; color: var(--lead); background: var(--well); border-radius: var(--r-input); padding: 10px 12px; }
+.role-card .login code { font-family: inherit; font-weight: 600; color: var(--ink); }
+
+/* ---------- Đường đi của phiếu ---------- */
+.flow { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; background: var(--surface); border-radius: var(--r-group); padding: 8px 16px; }
+.flow li { display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 14px; padding: 12px 0; position: relative; }
+.flow li + li { border-top: 1px solid var(--rule); }
+.flow .n { width: 32px; height: 32px; border-radius: 50%; background: var(--tint-soft); color: var(--tint); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+.flow .who { font-size: 14px; color: var(--lead); }
+.flow b { font-weight: 600; }
+.bar { display: flex; gap: 4px; }
+.bar span { flex: 1; height: 6px; border-radius: 3px; background: var(--rule); }
+.bar span.done { background: var(--tint); }
+.bar span.now { background: var(--warn-dot); }
+.bar-demo { background: var(--surface); border-radius: var(--r-group); padding: 16px; display: grid; gap: 10px; }
+.bar-demo .top { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* ---------- Bảng trạng thái ---------- */
+.table-wrap { overflow-x: auto; background: var(--surface); border-radius: var(--r-group); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 12px 16px; vertical-align: top; }
+th { font-size: 13px; font-weight: 600; color: var(--lead); border-bottom: 1px solid var(--rule); }
+tr + tr td { border-top: 1px solid var(--rule); }
+
+/* ---------- Hướng dẫn từng việc ---------- */
+.task { background: var(--surface); border-radius: var(--r-group); overflow: hidden; }
+.task > summary {
+  list-style: none; cursor: pointer; padding: 16px; display: flex; gap: 14px; align-items: center;
+}
+.sico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--tint-soft); color: var(--tint); flex: none; }
+.sico.crit { background: var(--crit-soft); color: var(--crit); }
+.task > summary::-webkit-details-marker { display: none; }
+.task > summary .t { min-width: 0; flex: 1; display: grid; gap: 2px; }
+.task > summary .t b { font-weight: 600; font-size: 17px; line-height: 1.35; }
+.task > summary .t span { font-size: 14px; color: var(--lead); }
+.task > summary .chev { color: var(--lead); transition: transform .2s; flex: none; }
+.task[open] > summary .chev { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .task > summary .chev { transition: none; } }
+.task .content { padding: 0 16px 20px; display: grid; gap: 16px; border-top: 1px solid var(--rule); padding-top: 16px; }
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: st; display: grid; gap: 12px; }
+ol.steps > li { counter-increment: st; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 12px; }
+ol.steps > li::before {
+  content: counter(st); width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--tint);
+  color: var(--tint); font-size: 13px; font-weight: 700; display: grid; place-items: center; margin-top: 1px;
+}
+.tasks { display: grid; gap: 10px; }
+.task-group-title { font-size: 14px; font-weight: 600; color: var(--lead); margin-top: 8px; }
+
+/* ---------- Ghi chú ---------- */
+.note { border-radius: var(--r-input); padding: 12px 14px; display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; font-size: 15px; }
+.note svg { margin-top: 2px; }
+.note.tip { background: var(--tint-soft); color: var(--ink); }
+.note.tip svg { color: var(--tint); }
+.note.warn { background: var(--warn-soft); }
+.note.warn svg { color: var(--warn); }
+.note.crit { background: var(--crit-soft); }
+.note.crit svg { color: var(--crit); }
+
+/* ---------- Ảnh màn hình ---------- */
+figure { margin: 0; display: grid; gap: 8px; }
+figure .shot { background: var(--well); border-radius: 16px; padding: 12px; display: flex; justify-content: center; }
+figure img { border-radius: 10px; box-shadow: var(--shadow); max-height: 560px; width: auto; }
+figcaption { font-size: 14px; color: var(--lead); }
+.shots { display: grid; gap: 16px; }
+@media (min-width: 720px) { .shots.two { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; } }
+
+/* ---------- Bảng màu ---------- */
+.legend { display: grid; gap: 10px; }
+@media (min-width: 640px) { .legend { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.legend > div { background: var(--surface); border-radius: 16px; padding: 14px 16px; display: grid; gap: 4px; }
+.lifebar { height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden; margin-top: 6px; }
+.lifebar i { display: block; height: 100%; border-radius: 3px; }
+
+/* ---------- Quy tắc & thuật ngữ ---------- */
+.rules { display: grid; gap: 10px; }
+@media (min-width: 640px) { .rules { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.rules > div { background: var(--surface); border-radius: 16px; padding: 16px; display: grid; gap: 6px; align-content: start; }
+.temps { display: grid; gap: 6px; margin-top: 4px; }
+.temps div { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; }
+dl.terms { margin: 0; background: var(--surface); border-radius: var(--r-group); }
+dl.terms > div { display: grid; grid-template-columns: 1fr; gap: 2px; padding: 12px 16px; }
+@media (min-width: 640px) { dl.terms > div { grid-template-columns: 170px minmax(0, 1fr); gap: 16px; } }
+dl.terms > div + div { border-top: 1px solid var(--rule); }
+dt { font-weight: 600; }
+dd { margin: 0; color: var(--lead); }
+
+/* ---------- Hỏi đáp ---------- */
+.faq { display: grid; gap: 8px; }
+.faq details { background: var(--surface); border-radius: 16px; padding: 0 16px; }
+.faq summary { cursor: pointer; padding: 14px 0; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; color: var(--lead); font-weight: 400; font-size: 20px; line-height: 1; }
+.faq details[open] summary::after { content: "–"; }
+.faq details > div { padding-bottom: 16px; color: var(--lead); display: grid; gap: 8px; }
+
+.hero { display: grid; gap: 16px; }
+.hero .eyebrow { font-size: 14px; font-weight: 600; color: var(--tint); }
+footer { font-size: 14px; color: var(--lead); border-top: 1px solid var(--rule); padding-top: 20px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><path d="M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9Z"/><path d="M12 8v4M12 16h.01"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.4 2.6a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4Z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M12 11h4M12 16h4M8 11h.01M8 16h.01"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2M15 18H9M19 18h2a1 1 0 0 0 1-1v-3.6a1 1 0 0 0-.2-.6l-3.5-4.4A1 1 0 0 0 17.5 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16M18 17V9M13 17V5M8 17v-3"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-scan" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M8 7v10M12 7v10M17 7v10"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 24 24"><path d="M12 2a2 2 0 0 0-2 2v6H4a2 2 0 0 0-2 2 2 2 0 0 0 2 2h6v6a2 2 0 0 0 4 0v-6h6a2 2 0 0 0 0-4h-6V4a2 2 0 0 0-2-2Z"/></symbol>
+</svg>
+
+<div class="shell">
+  <nav class="toc" aria-label="Mục lục">
+    <div class="toc-inner">
+      <div class="brand">
+        <div class="brand-mark"><svg class="i"><use href="#i-cross"/></svg></div>
+        <div><b>Kho Vật tư y tế</b><span>Hướng dẫn sử dụng</span></div>
+      </div>
+      <details id="toc-details">
+        <summary>Mục lục</summary>
+        <div class="links">
+          <a href="#bat-dau">Bắt đầu trong 3 bước</a>
+          <a href="#vai-tro">Bạn là ai?</a>
+          <a href="#man-hinh">Làm quen màn hình</a>
+          <a href="#phieu-linh">Đường đi của phiếu lĩnh</a>
+          <a href="#phieu-nhap">Đường đi của hàng nhập</a>
+          <a href="#tung-viec">Hướng dẫn từng việc</a>
+          <a href="#mau-sac">Màu sắc và ký hiệu</a>
+          <a href="#quy-tac">Quy tắc cần nhớ</a>
+          <a href="#thu-nghiem">Thử 5 phút</a>
+          <a href="#thuat-ngu">Từ điển thuật ngữ</a>
+          <a href="#hoi-dap">Hỏi đáp và sự cố</a>
+        </div>
+      </details>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ===== Mở đầu ===== -->
+    <section class="hero" aria-labelledby="tieu-de">
+      <p class="eyebrow">Bệnh viện quận Phú Nhuận · Theo QĐ 651/QĐ-BVPN</p>
+      <h1 id="tieu-de">Hướng dẫn sử dụng ứng dụng Kho Vật tư y tế</h1>
+      <p class="lede">Ứng dụng giúp khoa lĩnh vật tư y tế từ kho chính, giúp kho cấp phát đúng lô, và giúp phòng Vật tư, kế toán theo dõi hàng nhập, hàng tồn. Mọi việc trước đây làm trên giấy (phiếu lĩnh, ký duyệt, chứng từ xuất kho, sổ kiểm nhập) giờ làm trên máy tính hoặc điện thoại.</p>
+      <div class="note tip">
+        <svg class="i"><use href="#i-info"/></svg>
+        <p>Bạn <b>không cần biết gì về máy tính</b> ngoài việc bấm và gõ chữ. Mỗi màn hình đều trả lời câu hỏi “bây giờ tôi cần làm gì”. Khi có việc đến lượt bạn, ứng dụng hiện sẵn một nút màu xanh như <span class="btn">Duyệt</span>. Bấm vào là xong.</p>
+      </div>
+    </section>
+
+    <!-- ===== Bắt đầu ===== -->
+    <section id="bat-dau" aria-labelledby="h-bat-dau">
+      <h2 id="h-bat-dau">Bắt đầu trong 3 bước</h2>
+      <ol class="start">
+        <li>
+          <h3>Mở ứng dụng</h3>
+          <p class="muted small">Mở trình duyệt (Chrome, Edge, Safari) trên máy tính hoặc điện thoại, vào địa chỉ do phòng Vật tư cung cấp. Khi chạy thử trên máy: <b>http://localhost:3000</b>.</p>
+        </li>
+        <li>
+          <h3>Đăng nhập</h3>
+          <p class="muted small">Gõ <b>mã nhân viên</b> (ví dụ NV0412) và <b>mật khẩu</b>, rồi bấm <span class="btn">Đăng nhập</span>. Bản dùng thử: chỉ cần bấm vào tên một người trong mục “Dùng thử với tài khoản mẫu”.</p>
+        </li>
+        <li>
+          <h3>Đọc màn Chào mừng</h3>
+          <p class="muted small">Lần đầu vào, ứng dụng giới thiệu 3 việc chính của bạn. Bấm <span class="btn">Bắt đầu</span> để vào màn <b>Hôm nay</b>, nơi bạn làm việc hằng ngày.</p>
+        </li>
+      </ol>
+      <div class="shots two">
+        <figure>
+          <div class="shot"><img src="ui/redesign-v3/01-dang-nhap-m.png" alt="Màn đăng nhập trên điện thoại: ô mã nhân viên, ô mật khẩu, nút Đăng nhập và danh sách tài khoản mẫu" loading="lazy"></div>
+          <figcaption>Màn đăng nhập. Phía dưới là danh sách tài khoản mẫu để dùng thử.</figcaption>
+        </figure>
+        <figure>
+          <div class="shot"><img src="ui/redesign-v3/02-chao-mung-m.png" alt="Màn chào mừng: lời chào theo tên, ba việc chính của vai trò và nút Bắt đầu" loading="lazy"></div>
+          <figcaption>Màn chào mừng chỉ hiện một lần cho mỗi người.</figcaption>
+        </figure>
+      </div>
+      <div class="note warn">
+        <svg class="i"><use href="#i-alert"/></svg>
+        <p><b>Sai mật khẩu?</b> Ứng dụng sẽ báo dòng chữ đỏ dưới ô nhập. Kiểm tra lại mã nhân viên (chữ NV và 4 số), hoặc gọi P.VTTBYT, <b>máy lẻ 214</b>, để được cấp lại mật khẩu. Bấm biểu tượng con mắt cạnh ô mật khẩu để xem mình đã gõ gì.</p>
+      </div>
+    </section>
+
+    <!-- ===== Vai trò ===== -->
+    <section id="vai-tro" aria-labelledby="h-vai-tro">
+      <h2 id="h-vai-tro">Bạn là ai?</h2>
+      <p class="muted">Mỗi người chỉ thấy những việc thuộc về mình. Chọn vai trò của bạn để xem bạn sẽ làm gì trong ứng dụng.</p>
+      <div class="roles" role="tablist" aria-label="Chọn vai trò">
+        <button role="tab" id="tab-dd" aria-controls="role-panel" aria-selected="true" data-role="dd">Điều dưỡng khoa</button>
+        <button role="tab" id="tab-tk" aria-controls="role-panel" aria-selected="false" data-role="tk">Trưởng khoa</button>
+        <button role="tab" id="tab-kho" aria-controls="role-panel" aria-selected="false" data-role="kho">Thủ kho</button>
+        <button role="tab" id="tab-vt" aria-controls="role-panel" aria-selected="false" data-role="vt">Trưởng P.VTTBYT</button>
+        <button role="tab" id="tab-kt" aria-controls="role-panel" aria-selected="false" data-role="kt">Kế toán dược</button>
+      </div>
+      <div class="role-card" id="role-panel" role="tabpanel" aria-live="polite">
+        <!-- Nội dung mặc định (Điều dưỡng); script thay khi chọn vai trò khác -->
+        <div class="role-head">
+          <div class="avatar" style="background:hsl(215 55% 45%)">NL</div>
+          <div><h3>Điều dưỡng / Kỹ thuật viên khoa</h3><p>Người lĩnh vật tư cho khoa. Ví dụ: Nguyễn Thị Lan, Khoa Nội.</p></div>
+        </div>
+        <div><p class="small muted">Menu bạn thấy</p><div class="chips"><span class="chip">Hôm nay</span><span class="chip">Phiếu lĩnh</span><span class="chip">Tồn kho</span></div></div>
+        <ul>
+          <li>Lập phiếu lĩnh vật tư cho khoa và gửi đi duyệt.</li>
+          <li>Theo dõi phiếu đang ở bước nào, ai đang giữ.</li>
+          <li>Lĩnh lại phiếu thường dùng chỉ với một lần bấm.</li>
+          <li>Sửa và gửi lại phiếu bị trả về hoặc bị từ chối.</li>
+        </ul>
+        <p class="login">Tài khoản mẫu: mã <code>NV0231</code>, mật khẩu <code>123456</code>. Nút tròn cạnh thanh tab (điện thoại) là <b>Lập phiếu lĩnh</b>.</p>
+      </div>
+    </section>
+
+    <!-- ===== Màn hình ===== -->
+    <section id="man-hinh" aria-labelledby="h-man-hinh">
+      <h2 id="h-man-hinh">Làm quen màn hình</h2>
+      <div class="prose">
+        <p>Ứng dụng có cùng nội dung trên máy tính và điện thoại, chỉ khác chỗ đặt menu:</p>
+      </div>
+      <div class="group">
+        <div class="row"><div class="ico"><svg class="i"><use href="#i-list"/></svg></div><div class="body"><b>Trên máy tính: menu ở cột bên trái</b><p>Gồm Hôm nay, Phiếu lĩnh, Nhập kho, Tồn kho, Báo cáo. Số nhỏ cạnh tên menu là số việc đang chờ bạn. Trong menu cũng có nút việc chính của bạn (Lập phiếu lĩnh, Quét mã lô hoặc Tìm kiếm). Bấm vào tên mình ở cuối cột để mở Tài khoản.</p></div></div>
+        <div class="row"><div class="ico"><svg class="i"><use href="#i-box"/></svg></div><div class="body"><b>Trên điện thoại: thanh tab ở đáy màn hình</b><p>Cạnh thanh tab có một <b>nút tròn</b> làm việc chính của bạn: điều dưỡng thì lập phiếu, thủ kho thì quét mã lô, các vai trò khác thì tìm kiếm. Chạm vào ảnh đại diện góc trên để mở Tài khoản.</p></div></div>
+        <div class="row"><div class="ico"><svg class="i"><use href="#i-search"/></svg></div><div class="body"><b>Tìm kiếm ở mọi nơi</b><p>Bấm <span class="key">Ctrl</span> + <span class="key">K</span> (máy Mac: <span class="key">⌘</span> + <span class="key">K</span>) hoặc ô Tìm kiếm. Gõ số phiếu, tên vật tư, mã (VT002) hoặc số lô. Gõ không dấu cũng được: “gang tay” vẫn ra “Găng tay”.</p></div></div>
+        <div class="row"><div class="ico"><svg class="i"><use href="#i-undo"/></svg></div><div class="body"><b>Lỡ tay thì Hoàn tác</b><p>Sau khi Duyệt, Xác nhận hay Cấp phát, góc màn hình hiện một thông báo nhỏ có nút <span class="btn soft">Hoàn tác</span>. Bấm ngay trong vài giây để quay lại như cũ.</p></div></div>
+      </div>
+      <figure>
+        <div class="shot"><img src="ui/redesign-v3/03-hom-nay-thu-kho-d.png" alt="Màn Hôm nay của thủ kho trên máy tính: menu bên trái, danh sách Cần bạn xử lý với nút trên từng dòng, và khung Lô cần chú ý bên phải" loading="lazy"></div>
+        <figcaption>Màn <b>Hôm nay</b> của thủ kho. Khung “Cần bạn xử lý” là danh sách việc; mỗi dòng có sẵn nút để làm ngay. Bên phải là các lô sắp hết hạn hoặc sắp hết hàng.</figcaption>
+      </figure>
+      <div class="prose">
+        <p><b>Màn Hôm nay</b> là màn quan trọng nhất. Mỗi sáng, bạn chỉ cần mở màn này và làm lần lượt các dòng trong <b>Cần bạn xử lý</b>. Khi hết việc, ứng dụng hiện dòng “Không có việc nào đang chờ bạn”.</p>
+        <p>Các khung khác trên màn Hôm nay: <b>Đang theo dõi</b> (phiếu bạn đã gửi, đang chờ người khác), <b>Vừa cấp phát</b>, <b>Lô cần chú ý</b> (thủ kho, P.VTTBYT), chi phí vật tư của khoa trong tháng (trưởng khoa), và lối tắt tới <b>Báo cáo</b> (kế toán, P.VTTBYT).</p>
+      </div>
+    </section>
+
+    <!-- ===== Phiếu lĩnh ===== -->
+    <section id="phieu-linh" aria-labelledby="h-phieu-linh">
+      <h2 id="h-phieu-linh">Đường đi của phiếu lĩnh</h2>
+      <p class="muted">Một phiếu lĩnh đi qua 5 bước, đúng như quy trình xuất kho trong QĐ 651. Mỗi bước có một người chịu trách nhiệm. Bạn chỉ thấy nút bấm khi đến lượt mình.</p>
+      <ol class="flow">
+        <li><span class="n">1</span><div><b>Gửi phiếu</b><p class="who">Điều dưỡng khoa lập phiếu, chọn vật tư, số lượng, rồi bấm Gửi duyệt.</p></div></li>
+        <li><span class="n">2</span><div><b>Trưởng khoa duyệt</b><p class="who">Trưởng khoa xem phiếu của khoa mình, bấm Duyệt hoặc Từ chối (kèm lý do).</p></div></li>
+        <li><span class="n">3</span><div><b>Kho xác nhận</b><p class="who">Thủ kho kiểm tra kho còn đủ hàng, bấm Xác nhận ngay trong ngày. Nếu thiếu hàng hay sai vật tư, bấm Trả lại khoa.</p></div></li>
+        <li><span class="n">4</span><div><b>P.VTTBYT duyệt</b><p class="who">Trưởng phòng Vật tư thiết bị y tế duyệt lần cuối, hoặc Từ chối (kèm lý do).</p></div></li>
+        <li><span class="n">5</span><div><b>Cấp phát</b><p class="who">Thủ kho lấy hàng theo đúng lô ứng dụng chỉ, in chứng từ xuất kho, giao cho khoa ký nhận. Tồn kho tự trừ.</p></div></li>
+      </ol>
+      <div class="bar-demo" aria-label="Ví dụ thanh tiến độ của phiếu">
+        <div class="top"><b class="tab">PL-2026-0131 · Khoa Nội</b><span class="pill wait">Chờ kho xác nhận</span></div>
+        <div class="bar" aria-hidden="true"><span class="done"></span><span class="done"></span><span class="now"></span><span></span><span></span></div>
+        <p class="small muted">Trên mỗi phiếu có thanh 5 vạch như thế này. Vạch xanh: bước đã xong. Vạch cam: bước đang chờ. Vạch xám: chưa tới. Bấm vào phiếu để xem ai đang giữ phiếu và từ lúc nào (mục <b>Nhật ký</b>).</p>
+      </div>
+      <h3>Trạng thái của phiếu</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Bạn thấy</th><th>Nghĩa là</th><th>Ai làm tiếp</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill draft">Nháp</span></td><td>Phiếu đã lưu nhưng chưa gửi.</td><td>Người lập phiếu</td></tr>
+            <tr><td><span class="pill wait">Chờ trưởng khoa duyệt</span></td><td>Đã gửi, đang chờ trưởng khoa.</td><td>Trưởng khoa</td></tr>
+            <tr><td><span class="pill wait">Chờ kho xác nhận</span></td><td>Khoa đã duyệt, chờ kho kiểm tra hàng.</td><td>Thủ kho</td></tr>
+            <tr><td><span class="pill wait">Chờ P.VTTBYT duyệt</span></td><td>Kho đã xác nhận đủ hàng.</td><td>Trưởng P.VTTBYT</td></tr>
+            <tr><td><span class="pill wait">Chờ cấp phát</span></td><td>Đã duyệt xong, chờ kho lấy hàng.</td><td>Thủ kho</td></tr>
+            <tr><td><span class="pill ok">Đã cấp phát</span></td><td>Hàng đã xuất cho khoa. Phiếu xong.</td><td>Không ai</td></tr>
+            <tr><td><span class="pill wait">Kho trả lại</span></td><td>Kho trả phiếu về khoa để sửa (đọc lý do trên phiếu).</td><td>Người lập phiếu</td></tr>
+            <tr><td><span class="pill crit">Bị từ chối</span></td><td>Phiếu dừng lại. Đọc lý do, sửa rồi gửi lại trong 7 ngày.</td><td>Người lập phiếu</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure>
+        <div class="shot"><img src="ui/redesign-v3/05-phieu-chia-doi-d.png" alt="Màn Phiếu lĩnh trên máy tính: danh sách phiếu bên trái, chi tiết phiếu đang chọn bên phải với thanh 5 bước, danh sách vật tư và nhật ký" loading="lazy"></div>
+        <figcaption>Màn <b>Phiếu lĩnh</b> trên máy tính: bấm một phiếu ở bên trái, chi tiết hiện bên phải. Phía trên có 3 nhóm: <b>Cần xử lý</b>, <b>Đang xử lý</b>, <b>Đã xong</b>.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== Phiếu nhập ===== -->
+    <section id="phieu-nhap" aria-labelledby="h-phieu-nhap">
+      <h2 id="h-phieu-nhap">Đường đi của hàng nhập</h2>
+      <p class="muted">Khi nhà cung cấp giao hàng theo hợp đồng, phiếu nhập đi qua 4 bước. Hàng chỉ được cộng vào tồn kho ở bước cuối.</p>
+      <ol class="flow">
+        <li><span class="n">1</span><div><b>Kiểm nhập</b><p class="who">Thủ kho kiểm từng dòng: tên, số lô, hạn dùng, số lượng, đơn giá so với giá hợp đồng. Đánh dấu Đạt hoặc Không đạt. Xong bấm Chuyển kế toán.</p></div></li>
+        <li><span class="n">2</span><div><b>Kế toán kiểm tra</b><p class="who">Kế toán dược đối chiếu hóa đơn, bấm Xác nhận hóa đơn.</p></div></li>
+        <li><span class="n">3</span><div><b>Ký duyệt</b><p class="who">Trưởng P.VTTBYT xem kết quả kiểm nhập, bấm Ký duyệt nhập kho.</p></div></li>
+        <li><span class="n">4</span><div><b>Nhập kho</b><p class="who">Ứng dụng tự đưa lô đạt vào kho. Lô không đạt nằm ở khu <b>biệt trữ</b>, không được cấp phát.</p></div></li>
+      </ol>
+      <div class="note crit">
+        <svg class="i"><use href="#i-stop"/></svg>
+        <p><b>Giá trên hóa đơn khác giá hợp đồng</b> thì dòng đó tô đỏ, ghi “Lệch +4,1%”, và phiếu <b>không chuyển kế toán được</b>. Liên hệ nhà cung cấp xuất lại hóa đơn. Khi nhà cung cấp đã đồng ý, bấm <span class="btn soft">NCC đồng ý giá hợp đồng</span> trên dòng đó.</p>
+      </div>
+    </section>
+
+    <!-- ===== Từng việc ===== -->
+    <section id="tung-viec" aria-labelledby="h-tung-viec">
+      <h2 id="h-tung-viec">Hướng dẫn từng việc</h2>
+      <p class="muted">Bấm vào một việc để xem các bước. Ghi chú bên phải mỗi việc cho biết ai làm việc đó.</p>
+
+      <div class="tasks">
+        <p class="task-group-title">Lĩnh vật tư</p>
+
+        <details class="task" id="viec-lap-phieu">
+          <summary><span class="sico"><svg class="i"><use href="#i-pen"/></svg></span><div class="t"><b>Lập phiếu lĩnh mới</b><span>Điều dưỡng / KTV khoa</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Ở màn <b>Hôm nay</b>, bấm <span class="btn">Lập phiếu</span>. Trên điện thoại có thể bấm nút tròn <b>+</b> ở đáy màn hình.</p></li>
+              <li><p>Phiếu tự ghi tên khoa của bạn, lĩnh tại kho chính. Ứng dụng gợi ý sẵn các vật tư khoa hay lĩnh, kèm ảnh. Bấm vào ảnh để thêm.</p></li>
+              <li><p>Muốn thêm vật tư khác, gõ tên hoặc mã vào ô <b>“Thêm vật tư: gõ tên hoặc mã”</b> rồi chọn trong danh sách. Mỗi dòng cho biết kho còn bao nhiêu.</p></li>
+              <li><p>Chỉnh số lượng bằng nút <b>−</b> / <b>+</b> hoặc gõ số. Ứng dụng đặt sẵn số lượng lần trước khoa đã lĩnh.</p></li>
+              <li><p>Ghi lý do lĩnh hoặc y lệnh vào ô <b>Ghi chú</b> nếu có (hóa chất nên ghi y lệnh).</p></li>
+              <li><p>Kiểm tra lại rồi bấm <span class="btn">Gửi duyệt</span>. Phiếu được đánh số riêng (ví dụ PL-2026-0131) và chuyển cho trưởng khoa.</p></li>
+            </ol>
+            <div class="note warn"><svg class="i"><use href="#i-alert"/></svg><p>Nếu số lượng bạn xin <b>lớn hơn số kho đang có</b>, con số chuyển màu cam. Bạn vẫn gửi được, nhưng kho có thể trả phiếu về để bạn giảm số lượng.</p></div>
+            <div class="note tip"><svg class="i"><use href="#i-info"/></svg><p>Chưa xong? Bấm <span class="btn soft">Lưu nháp</span>. Phiếu nháp nằm trong mục <b>Cần xử lý</b> cho đến khi bạn gửi. Mở lại phiếu nháp để <b>Sửa</b>, <b>Xóa</b> hoặc <b>Gửi duyệt</b>.</p></div>
+            <figure>
+              <div class="shot"><img src="ui/redesign-v3/06-lap-phieu-m.png" alt="Màn lập phiếu lĩnh trên điện thoại: danh sách vật tư có ảnh, nút cộng trừ số lượng và nút Gửi duyệt" loading="lazy"></div>
+              <figcaption>Lập phiếu trên điện thoại. Mỗi vật tư có ảnh để tránh lấy nhầm cỡ.</figcaption>
+            </figure>
+          </div>
+        </details>
+
+        <details class="task">
+          <summary><span class="sico"><svg class="i"><use href="#i-undo"/></svg></span><div class="t"><b>Lĩnh lại như phiếu cũ</b><span>Điều dưỡng / KTV khoa</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Ở màn <b>Hôm nay</b>, ngay dưới nút Lập phiếu có dòng <b>“Lĩnh lại như PL-…”</b> (phiếu đã cấp phát gần nhất của bạn). Bấm vào đó.</p></li>
+              <li><p>Hoặc mở bất kỳ phiếu cũ nào, bấm nút <b>…</b> (Thêm thao tác) rồi chọn <b>Lĩnh lại như phiếu này</b>.</p></li>
+              <li><p>Ứng dụng chép sẵn toàn bộ vật tư và số lượng. Sửa nếu cần rồi bấm <span class="btn">Gửi duyệt</span>.</p></li>
+            </ol>
+            <p class="small muted">Rất tiện cho việc bổ sung cơ số tủ trực hằng tuần.</p>
+          </div>
+        </details>
+
+        <details class="task">
+          <summary><span class="sico crit"><svg class="i"><use href="#i-stop"/></svg></span><div class="t"><b>Sửa phiếu bị trả lại hoặc bị từ chối</b><span>Điều dưỡng / KTV khoa</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Phiếu bị trả lại hoặc bị từ chối hiện trong <b>Cần bạn xử lý</b>. Bấm vào phiếu.</p></li>
+              <li><p>Đọc khung lý do ở đầu phiếu, ví dụ “Kho không đủ số lượng, đề nghị khoa giảm”.</p></li>
+              <li><p><b>Phiếu Kho trả lại</b>: phiếu quay về dạng nháp. Bấm <span class="btn soft">Sửa</span>, sửa theo lý do, rồi <span class="btn">Gửi duyệt</span>.</p></li>
+              <li><p><b>Phiếu Bị từ chối</b>: bấm <span class="btn">Sửa và gửi lại</span>. Ứng dụng tạo phiếu mới chép từ phiếu cũ để bạn sửa rồi gửi. Nút này có trong <b>7 ngày</b> sau khi bị từ chối.</p></li>
+            </ol>
+          </div>
+        </details>
+
+        <p class="task-group-title">Duyệt phiếu</p>
+
+        <details class="task" id="viec-duyet">
+          <summary><span class="sico"><svg class="i"><use href="#i-check"/></svg></span><div class="t"><b>Duyệt hoặc từ chối phiếu lĩnh</b><span>Trưởng khoa · Trưởng P.VTTBYT</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Mở màn <b>Hôm nay</b>. Phiếu chờ bạn nằm trong <b>Cần bạn xử lý</b>, mỗi dòng có nút <span class="btn">Duyệt</span>.</p></li>
+              <li><p>Muốn xem kỹ, bấm vào dòng để mở phiếu: danh sách vật tư, số lượng, giá trị ước tính, người lập, ghi chú.</p></li>
+              <li><p>Đồng ý thì bấm <span class="btn">Duyệt</span>. Phiếu chuyển sang bước tiếp theo.</p></li>
+              <li><p>Không đồng ý thì bấm <span class="btn danger">Từ chối</span>, ghi lý do (bắt buộc) hoặc chọn nhanh một lý do có sẵn như “Vượt định mức tháng của khoa”, rồi xác nhận. Người lập sẽ đọc lý do này để sửa.</p></li>
+            </ol>
+            <div class="note tip"><svg class="i"><use href="#i-info"/></svg><p><b>Duyệt nhiều phiếu một lúc:</b> vào menu <b>Phiếu lĩnh</b>, nhóm <b>Cần xử lý</b>, bấm <span class="btn soft">Chọn</span>, tích các phiếu, rồi bấm <span class="btn">Duyệt 3 phiếu</span>.</p></div>
+            <p class="small muted">Trưởng khoa chỉ thấy và duyệt phiếu của khoa mình. Trưởng P.VTTBYT thấy phiếu của mọi khoa.</p>
+          </div>
+        </details>
+
+        <p class="task-group-title">Kho</p>
+
+        <details class="task">
+          <summary><span class="sico"><svg class="i"><use href="#i-list"/></svg></span><div class="t"><b>Xác nhận phiếu hoặc trả lại khoa</b><span>Thủ kho</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Mở phiếu có trạng thái <span class="pill wait">Chờ kho xác nhận</span>.</p></li>
+              <li><p>Xem số lượng từng vật tư so với tồn kho. Bấm tên vật tư để xem các lô đang có.</p></li>
+              <li><p>Đủ hàng thì bấm <span class="btn">Xác nhận</span>. Phiếu chuyển lên Trưởng P.VTTBYT.</p></li>
+              <li><p>Thiếu hàng, sai vật tư hoặc sai đơn vị tính thì bấm <span class="btn soft">Trả lại khoa</span> và ghi lý do. Phiếu quay về khoa dạng nháp.</p></li>
+            </ol>
+            <div class="note warn"><svg class="i"><use href="#i-alert"/></svg><p>Theo quy trình, phiếu lĩnh phải được kho xác nhận <b>ngay trong ngày nhận</b>.</p></div>
+          </div>
+        </details>
+
+        <details class="task" id="viec-cap-phat">
+          <summary><span class="sico"><svg class="i"><use href="#i-scan"/></svg></span><div class="t"><b>Cấp phát theo lô và in chứng từ</b><span>Thủ kho</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Mở phiếu <span class="pill wait">Chờ cấp phát</span>, bấm <span class="btn">Cấp phát</span>.</p></li>
+              <li><p>Ứng dụng lập sẵn <b>danh sách lấy hàng</b>: mỗi vật tư lấy từ lô nào, bao nhiêu, ở kệ nào. Lô hết hạn sớm hơn luôn được lấy trước (quy tắc FEFO).</p></li>
+              <li><p>Đến kệ, <b>quét tem lô</b> bằng máy quét cầm tay, hoặc gõ số lô (ví dụ BT2402) vào ô rồi bấm <span class="key">Enter</span>.</p></li>
+              <li><p>Ứng dụng báo ngay: <span class="pill ok">Đúng lô</span>, hoặc cảnh báo nếu lô <b>chưa đến lượt</b>, <b>đã hết hạn</b>, <b>đang biệt trữ</b> hay <b>không thuộc phiếu này</b>. Làm theo hướng dẫn trong khung báo.</p></li>
+              <li><p>Khi thanh tiến độ đủ (ví dụ 4/4 lô), bấm <span class="btn">Hoàn tất cấp phát</span>. Tồn kho tự trừ theo từng lô.</p></li>
+              <li><p>Bấm <span class="btn">In chứng từ xuất kho</span>. Bản in khổ A4 có 3 ô ký: Người phát, Người lĩnh, P.VTTBYT. Giao hàng và chứng từ cho khoa ký nhận.</p></li>
+            </ol>
+            <div class="note crit"><svg class="i"><use href="#i-stop"/></svg><p><b>Lô đã hết hạn thì không bao giờ được cấp phát.</b> Để lô đó sang khu biệt trữ chờ hủy và báo P.VTTBYT lập biên bản.</p></div>
+            <p class="small muted">Lấy nhầm? Bấm <b>Hoàn tác cấp phát</b> trên màn “Đã cấp phát”, tồn kho trở lại như trước.</p>
+            <figure>
+              <div class="shot"><img src="ui/redesign-v3/07-cap-phat-d.png" alt="Màn cấp phát: ô quét tem lô, thanh tiến độ số lô đã lấy và danh sách vật tư với lô, hạn dùng, vị trí kệ" loading="lazy"></div>
+              <figcaption>Màn cấp phát: quét tem lô ở trên, danh sách lô cần lấy ở dưới.</figcaption>
+            </figure>
+          </div>
+        </details>
+
+        <details class="task">
+          <summary><span class="sico"><svg class="i"><use href="#i-scan"/></svg></span><div class="t"><b>Tra nhanh một lô bằng máy quét</b><span>Thủ kho</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Bấm <b>Quét mã lô</b>: nút tròn cạnh thanh tab trên điện thoại, hoặc nút trong menu bên trái trên máy tính.</p></li>
+              <li><p>Quét tem hoặc gõ số lô / mã GS1, bấm <span class="btn soft">Tra cứu</span>.</p></li>
+              <li><p>Ứng dụng cho biết lô này thuộc vật tư nào, còn bao nhiêu, hạn dùng, và có phải <b>lô được xuất trước</b> hay không.</p></li>
+            </ol>
+          </div>
+        </details>
+
+        <p class="task-group-title">Nhập hàng</p>
+
+        <details class="task" id="viec-kiem-nhap">
+          <summary><span class="sico"><svg class="i"><use href="#i-truck"/></svg></span><div class="t"><b>Kiểm nhập hàng mới về</b><span>Thủ kho</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Vào menu <b>Nhập kho</b>, mở phiếu <span class="pill wait">Đang kiểm nhập</span>.</p></li>
+              <li><p>Với từng dòng, đối chiếu hàng thật với phiếu: tên, số lô, hạn dùng, số lượng.</p></li>
+              <li><p>Xem cột giá: nếu giá hóa đơn khác <b>giá hợp đồng</b>, dòng có chữ đỏ “Lệch …%”. Xem cách xử lý ở mục <a href="#phieu-nhap">Đường đi của hàng nhập</a>.</p></li>
+              <li><p>Hàng tốt để công tắc ở <b>Đạt</b>. Hàng hỏng (hộp móp, ẩm, sai quy cách) gạt sang <b>Không đạt, đưa vào biệt trữ</b> và ghi lý do (bắt buộc).</p></li>
+              <li><p>Bấm <span class="btn">Chuyển kế toán</span>. Nút này chỉ bấm được khi không còn dòng lệch giá và mọi dòng không đạt đã có lý do.</p></li>
+            </ol>
+            <figure>
+              <div class="shot"><img src="ui/redesign-v3/09-nhap-kho-d.png" alt="Màn kiểm nhập: danh sách dòng hàng với số lô, hạn dùng, giá so với giá hợp đồng, công tắc Đạt và khung hóa đơn" loading="lazy"></div>
+              <figcaption>Màn kiểm nhập. Dòng lệch giá được tô đỏ.</figcaption>
+            </figure>
+          </div>
+        </details>
+
+        <details class="task">
+          <summary><span class="sico"><svg class="i"><use href="#i-check"/></svg></span><div class="t"><b>Xác nhận hóa đơn</b><span>Kế toán dược</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Phiếu nhập chờ bạn hiện ở màn <b>Hôm nay</b> và có số đếm trên menu <b>Nhập kho</b>.</p></li>
+              <li><p>Mở phiếu, xem khung <b>Hóa đơn và hợp đồng</b>: nhà cung cấp, số hóa đơn, gói thầu, giá trị theo hóa đơn.</p></li>
+              <li><p>Đối chiếu với hóa đơn giấy, rồi bấm <span class="btn">Xác nhận hóa đơn</span>. Phiếu chuyển cho Trưởng P.VTTBYT ký.</p></li>
+            </ol>
+          </div>
+        </details>
+
+        <details class="task">
+          <summary><span class="sico"><svg class="i"><use href="#i-pen"/></svg></span><div class="t"><b>Ký duyệt nhập kho</b><span>Trưởng P.VTTBYT</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Mở phiếu nhập <span class="pill wait">Chờ ký duyệt</span>.</p></li>
+              <li><p>Xem kết quả kiểm nhập: dòng nào đạt, dòng nào không đạt và lý do.</p></li>
+              <li><p>Bấm <span class="btn">Ký duyệt nhập kho</span>. Lô đạt vào kho ngay; lô không đạt nằm ở khu biệt trữ.</p></li>
+            </ol>
+          </div>
+        </details>
+
+        <p class="task-group-title">Theo dõi và báo cáo</p>
+
+        <details class="task">
+          <summary><span class="sico"><svg class="i"><use href="#i-box"/></svg></span><div class="t"><b>Xem tồn kho và lô cần chú ý</b><span>Mọi vai trò</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Vào menu <b>Tồn kho</b>. Có 3 nhóm: <b>Tất cả</b>, <b>Cần chú ý</b> (sắp hết hạn, dưới tồn tối thiểu), <b>Biệt trữ</b>.</p></li>
+              <li><p>Gõ tên vật tư, mã (VT002) hoặc số lô in trên tem vào ô tìm.</p></li>
+              <li><p>Bấm một vật tư để xem: ảnh, tồn so với mức tối thiểu, điều kiện bảo quản, các lô xếp theo hạn dùng (lô trên cùng là <b>Xuất trước</b>), lượng xuất 6 tháng, các phiếu gần đây.</p></li>
+            </ol>
+            <p class="small muted">Thanh màu dưới mỗi vật tư là hạn dùng của lô sẽ được xuất trước. Lô biệt trữ không được cấp phát và không tính vào tồn dùng được.</p>
+            <figure>
+              <div class="shot"><img src="ui/redesign-v3/08-ton-kho-toi-d.png" alt="Màn tồn kho ở giao diện tối: danh sách vật tư có ảnh, số tồn và thanh hạn dùng" loading="lazy"></div>
+              <figcaption>Màn <b>Tồn kho</b> ở giao diện tối.</figcaption>
+            </figure>
+          </div>
+        </details>
+
+        <details class="task" id="viec-bao-cao">
+          <summary><span class="sico"><svg class="i"><use href="#i-chart"/></svg></span><div class="t"><b>Xem báo cáo, tải về Excel, gửi dự trù</b><span>Thủ kho · Trưởng khoa · P.VTTBYT · Kế toán</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Vào menu <b>Báo cáo</b>. Chọn một trong 3 loại ở đầu trang:
+                <br><b>Xuất – nhập – tồn</b>: tồn đầu, nhập, xuất, tồn cuối, giá trị từng vật tư trong tháng.
+                <br><b>Theo khoa</b>: giá trị vật tư mỗi khoa đã lĩnh.
+                <br><b>Dự trù</b>: đề xuất số lượng cần mua cho tháng sau.</p></li>
+              <li><p>Dùng nút <b>Tháng trước</b> / <b>Tháng sau</b> để đổi tháng.</p></li>
+              <li><p>Bấm <span class="btn">Tải về Excel</span>. Tệp tải về mở thẳng bằng Excel, giữ nguyên tiếng Việt.</p></li>
+              <li><p><b>Dự trù tháng:</b> ứng dụng tính sẵn <b>số gợi ý</b> = lượng xuất trung bình 3 tháng gần nhất × 1,2 − tồn cuối tháng. Sửa số nếu khoa có kế hoạch riêng, rồi bấm <span class="btn">Gửi dự trù</span>.</p></li>
+            </ol>
+            <div class="note warn"><svg class="i"><use href="#i-alert"/></svg><p>Dự trù được nhận từ <b>ngày 1 đến ngày 5</b> hằng tháng. Ngoài thời gian này là dự trù đột xuất.</p></div>
+            <figure>
+              <div class="shot"><img src="ui/redesign-v3/10-bao-cao-d.png" alt="Màn báo cáo xuất nhập tồn: chọn loại báo cáo, chọn tháng, bảng số liệu và nút tải về Excel" loading="lazy"></div>
+              <figcaption>Màn <b>Báo cáo</b> xuất – nhập – tồn.</figcaption>
+            </figure>
+          </div>
+        </details>
+
+        <details class="task">
+          <summary><span class="sico"><svg class="i"><use href="#i-sun"/></svg></span><div class="t"><b>Đổi giao diện sáng/tối, đăng xuất</b><span>Mọi vai trò</span></div><svg class="i chev"><use href="#i-chev"/></svg></summary>
+          <div class="content">
+            <ol class="steps">
+              <li><p>Mở <b>Tài khoản</b>: bấm tên mình ở cuối menu trái (máy tính) hoặc ảnh đại diện góc trên (điện thoại).</p></li>
+              <li><p>Mục <b>Giao diện</b>: chọn <b>Sáng</b>, <b>Tối</b> hoặc <b>Tự động</b> (theo cài đặt của máy).</p></li>
+              <li><p>Bấm <b>Xem lại phần giới thiệu</b> nếu muốn đọc lại màn chào mừng.</p></li>
+              <li><p>Dùng máy chung? Luôn bấm <b>Đăng xuất</b> khi rời máy.</p></li>
+            </ol>
+            <p class="small muted">Bản dùng thử có nút <b>Đặt lại dữ liệu mẫu</b>: mọi phiếu, lô và phiếu nhập trở về như ngày 30/09/2026. Những gì bạn đã duyệt, cấp phát trong buổi thử sẽ mất.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ===== Màu sắc ===== -->
+    <section id="mau-sac" aria-labelledby="h-mau-sac">
+      <h2 id="h-mau-sac">Màu sắc và ký hiệu</h2>
+      <p class="muted">Ứng dụng dùng ít màu. Mỗi màu luôn đi kèm chữ và biểu tượng, nên người khó phân biệt màu vẫn đọc được.</p>
+      <div class="legend">
+        <div><span class="pill crit">Đỏ: nghiêm trọng</span><p class="small muted">Lô đã hết hạn hoặc còn dưới 30 ngày, hết hàng, phiếu bị từ chối, giá lệch hợp đồng. Thường kèm việc bị chặn.</p><div class="lifebar"><i style="width:12%;background:var(--crit-dot)"></i></div></div>
+        <div><span class="pill wait">Cam: cần để ý / đang chờ</span><p class="small muted">Lô còn dưới 90 ngày, tồn dưới mức tối thiểu, phiếu đang chờ người khác xử lý.</p><div class="lifebar"><i style="width:35%;background:var(--warn-dot)"></i></div></div>
+        <div><span class="pill ok">Xanh lá: đã xong / đi tiếp</span><p class="small muted">Bước đã qua, phiếu đã cấp phát. Nút xanh là việc chính của bạn: Duyệt, Xác nhận, Cấp phát.</p><div class="lifebar"><i style="width:80%;background:var(--tint)"></i></div></div>
+        <div><span class="pill cold">Xanh dương nhạt: bảo quản lạnh</span><p class="small muted">Chỉ hiện ở vật tư cần bảo quản mát (8–15 °C) hoặc lạnh (2–8 °C).</p></div>
+        <div><span class="pill draft">Xám: nháp / bình thường</span><p class="small muted">Phiếu chưa gửi, hoặc mọi thứ đang ổn, không cần làm gì.</p></div>
+        <div><b>Nút trên từng dòng</b><p class="small muted">Khi một dòng có nút như <span class="btn">Xác nhận</span>, nghĩa là <b>đến lượt bạn</b>. Dòng không có nút là việc của người khác.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Quy tắc ===== -->
+    <section id="quy-tac" aria-labelledby="h-quy-tac">
+      <h2 id="h-quy-tac">Quy tắc cần nhớ</h2>
+      <p class="muted">Trích từ quy trình nhập hàng, bảo quản và cấp phát VTYT của bệnh viện (QĐ 651/QĐ-BVPN, 05/12/2024). Ứng dụng đã làm sẵn phần lớn các quy tắc này cho bạn.</p>
+      <div class="rules">
+        <div><h3>Hết hạn trước, xuất trước</h3><p class="small muted">Luôn xuất lô có hạn dùng gần nhất (FEFO), cùng hạn thì lô nhập trước xuất trước (FIFO). Ứng dụng tự chọn lô và cảnh báo khi quét sai lô.</p></div>
+        <div><h3>Điều kiện bảo quản</h3>
+          <div class="temps tab">
+            <div><span>Nhiệt độ phòng</span><b>15–25 °C</b></div>
+            <div><span>Kho mát</span><b>8–15 °C</b></div>
+            <div><span>Kho lạnh</span><b>2–8 °C</b></div>
+            <div><span>Độ ẩm</span><b>≤ 70%</b></div>
+          </div>
+        </div>
+        <div><h3>Kho xác nhận trong ngày</h3><p class="small muted">Phiếu lĩnh đến kho phải được xác nhận ngay trong ngày. Tồn thiếu thì báo lại khoa.</p></div>
+        <div><h3>Dự trù ngày 1–5</h3><p class="small muted">Khoa và kho gửi dự trù tháng từ ngày 1 đến ngày 5. Ngoài ra có thể dự trù đột xuất.</p></div>
+        <div><h3>Hàng không đạt vào biệt trữ</h3><p class="small muted">Hàng hỏng, sai quy cách khi nhập, hoặc lô hết hạn: để riêng ở khu biệt trữ, chờ trả nhà cung cấp hoặc hủy. Không cấp phát.</p></div>
+        <div><h3>Giá theo hợp đồng</h3><p class="small muted">Chỉ nhập hàng đúng giá hợp đồng / trúng thầu, và chỉ hàng được BHYT thanh toán (trừ hàng thu phí, trọn gói).</p></div>
+        <div><h3>Kiểm kê mỗi tháng</h3><p class="small muted">Kiểm kê 1 lần/tháng cả kho chính lẫn tủ trực của khoa.</p></div>
+        <div><h3>Lưu hồ sơ 1 năm</h3><p class="small muted">Phiếu lĩnh, chứng từ xuất kho, sổ kiểm nhập được lưu ít nhất 1 năm.</p></div>
+      </div>
+    </section>
+
+    <!-- ===== Thử nghiệm ===== -->
+    <section id="thu-nghiem" aria-labelledby="h-thu">
+      <h2 id="h-thu">Thử 5 phút: đi hết một phiếu lĩnh</h2>
+      <p class="muted">Cách nhanh nhất để hiểu ứng dụng là tự đóng vai cả 4 người. Mật khẩu mọi tài khoản mẫu là <b>123456</b>. Đổi người bằng cách vào <b>Tài khoản</b> → <b>Đăng xuất</b>, rồi chọn người khác ở màn đăng nhập.</p>
+      <ol class="flow">
+        <li><span class="n">1</span><div><b>Nguyễn Thị Lan</b> <span class="muted small">· Điều dưỡng Khoa Nội · NV0231</span><p class="who">Ở màn Hôm nay bấm “Lĩnh lại như PL-2026-0114”, kiểm tra rồi bấm Gửi duyệt.</p></div></li>
+        <li><span class="n">2</span><div><b>Võ Thanh Bình</b> <span class="muted small">· Trưởng khoa Nội · NV0105</span><p class="who">Thấy phiếu vừa gửi trong “Cần bạn xử lý”, bấm Duyệt.</p></div></li>
+        <li><span class="n">3</span><div><b>Trần Văn Hùng</b> <span class="muted small">· Thủ kho · NV0412</span><p class="who">Mở phiếu, bấm Xác nhận.</p></div></li>
+        <li><span class="n">4</span><div><b>Lê Thị Kim Hạnh</b> <span class="muted small">· Trưởng P.VTTBYT · NV0058</span><p class="who">Bấm Duyệt.</p></div></li>
+        <li><span class="n">5</span><div><b>Trần Văn Hùng</b> <span class="muted small">· Thủ kho</span><p class="who">Bấm Cấp phát, gõ số lô theo danh sách (ví dụ BT2402) rồi Enter cho từng lô, bấm Hoàn tất cấp phát, rồi In chứng từ xuất kho.</p></div></li>
+        <li><span class="n">6</span><div><b>Phạm Minh Tuấn</b> <span class="muted small">· Kế toán dược · NV0377</span><p class="who">Mở Báo cáo, xem xuất – nhập – tồn tháng 9 đã có số vừa xuất. Bấm Tải về Excel.</p></div></li>
+      </ol>
+      <div class="note tip"><svg class="i"><use href="#i-info"/></svg><p>Dữ liệu dùng thử chỉ lưu trên trình duyệt của bạn, không ảnh hưởng người khác. Muốn làm lại từ đầu: <b>Tài khoản</b> → <b>Đặt lại dữ liệu mẫu</b>.</p></div>
+    </section>
+
+    <!-- ===== Thuật ngữ ===== -->
+    <section id="thuat-ngu" aria-labelledby="h-thuat-ngu">
+      <h2 id="h-thuat-ngu">Từ điển thuật ngữ</h2>
+      <dl class="terms">
+        <div><dt>VTYT, VTTH</dt><dd>Vật tư y tế; vật tư tiêu hao (dùng một lần như bơm tiêm, găng tay, bông gạc).</dd></div>
+        <div><dt>P.VTTBYT</dt><dd>Phòng Vật tư – Thiết bị y tế, quản lý kho và duyệt cấp phát.</dd></div>
+        <div><dt>P.TCKT</dt><dd>Phòng Tài chính – Kế toán.</dd></div>
+        <div><dt>Phiếu lĩnh</dt><dd>Giấy khoa gửi kho để xin nhận vật tư.</dd></div>
+        <div><dt>Cấp phát</dt><dd>Kho lấy hàng và giao cho khoa theo phiếu lĩnh đã duyệt.</dd></div>
+        <div><dt>Chứng từ xuất kho</dt><dd>Bản in khổ A4 khi cấp phát, có chữ ký người phát, người lĩnh và P.VTTBYT.</dd></div>
+        <div><dt>Kiểm nhập</dt><dd>Kiểm tra hàng nhà cung cấp giao trước khi nhập kho.</dd></div>
+        <div><dt>Lô, số lô</dt><dd>Một đợt sản xuất của vật tư, in trên tem/hộp (ví dụ BT2402). Cùng lô thì cùng hạn dùng.</dd></div>
+        <div><dt>HSD</dt><dd>Hạn sử dụng.</dd></div>
+        <div><dt>FEFO / FIFO</dt><dd>Hết hạn trước xuất trước / Nhập trước xuất trước.</dd></div>
+        <div><dt>Biệt trữ</dt><dd>Khu để riêng hàng không đạt hoặc hết hạn, không được cấp phát.</dd></div>
+        <div><dt>Tồn tối thiểu</dt><dd>Mức tồn thấp nhất cần giữ. Dưới mức này ứng dụng tô cam để nhắc mua thêm.</dd></div>
+        <div><dt>Xuất – nhập – tồn</dt><dd>Báo cáo tháng: tồn đầu + nhập − xuất = tồn cuối.</dd></div>
+        <div><dt>Dự trù</dt><dd>Đề xuất số lượng cần mua cho tháng sau.</dd></div>
+        <div><dt>NCC</dt><dd>Nhà cung cấp.</dd></div>
+        <div><dt>ĐVT</dt><dd>Đơn vị tính (cái, hộp, chai…).</dd></div>
+        <div><dt>Mã GS1</dt><dd>Mã vạch quốc tế trên hộp, chứa cả số lô và hạn dùng. Máy quét đọc được trực tiếp.</dd></div>
+      </dl>
+    </section>
+
+    <!-- ===== Hỏi đáp ===== -->
+    <section id="hoi-dap" aria-labelledby="h-hoi-dap">
+      <h2 id="h-hoi-dap">Hỏi đáp và sự cố</h2>
+      <div class="faq">
+        <details><summary>Tôi không thấy nút Duyệt (hay Xác nhận, Cấp phát)?</summary><div><p>Nút chỉ hiện khi <b>đến lượt bạn</b>. Xem thanh 5 bước và mục Nhật ký trên phiếu để biết phiếu đang chờ ai. Ví dụ phiếu còn “Chờ trưởng khoa duyệt” thì thủ kho chưa thể xác nhận.</p></div></details>
+        <details><summary>Tôi lỡ bấm Duyệt nhầm.</summary><div><p>Bấm ngay <b>Hoàn tác</b> trong thông báo nhỏ hiện ra sau khi duyệt. Nếu thông báo đã tắt, liên hệ người làm bước tiếp theo để họ từ chối hoặc trả lại phiếu.</p></div></details>
+        <details><summary>Tại sao tôi không lập được phiếu lĩnh?</summary><div><p>Chỉ điều dưỡng / KTV khoa lập phiếu. Trưởng khoa, thủ kho, P.VTTBYT và kế toán chỉ duyệt hoặc xử lý phiếu.</p></div></details>
+        <details><summary>Tôi không thấy phiếu của khoa khác.</summary><div><p>Đúng như vậy. Điều dưỡng và trưởng khoa chỉ thấy phiếu của khoa mình. Kho, P.VTTBYT và kế toán thấy phiếu của mọi khoa.</p></div></details>
+        <details><summary>Quét tem lô thì ứng dụng báo “Chưa đến lượt lô …”.</summary><div><p>Còn lô khác cùng vật tư hết hạn sớm hơn. Khung báo ghi rõ nên lấy lô nào, ở kệ nào. Lấy lô đó trước.</p></div></details>
+        <details><summary>Quét tem lô thì ứng dụng báo “Lô đã hết hạn”.</summary><div><p>Không cấp phát lô này. Để riêng lô sang khu biệt trữ và báo P.VTTBYT lập biên bản hủy.</p></div></details>
+        <details><summary>Nút “Chuyển kế toán” bị mờ, không bấm được.</summary><div><p>Còn dòng giá lệch hợp đồng, hoặc có dòng “Không đạt” chưa ghi lý do. Sửa hết các dòng đó là bấm được.</p></div></details>
+        <details><summary>Phiếu “Bị từ chối” không còn nút “Sửa và gửi lại”.</summary><div><p>Nút chỉ có trong 7 ngày sau khi bị từ chối. Sau đó, lập phiếu mới, hoặc mở phiếu cũ chọn “Lĩnh lại như phiếu này”.</p></div></details>
+        <details><summary>Quên mật khẩu, hoặc cần đổi khoa?</summary><div><p>Gọi P.VTTBYT, <b>máy lẻ 214</b>.</p></div></details>
+        <details><summary>Màn hình quá tối hoặc quá sáng.</summary><div><p>Vào <b>Tài khoản</b> → <b>Giao diện</b>, chọn Sáng, Tối hoặc Tự động.</p></div></details>
+      </div>
+    </section>
+
+    <footer>
+      <p>Hướng dẫn cho bản thử nghiệm 3.0 (nhánh <span class="tab">redesign/v3</span>), dùng dữ liệu mẫu ngày 30/09/2026. Nghiệp vụ theo QĐ 651/QĐ-BVPN của Bệnh viện quận Phú Nhuận. Tài liệu liên quan: <span class="tab">docs/nghiep-vu.md</span>, <span class="tab">docs/ui/redesign-v3.md</span>.</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  var ROLES = {
+    dd: { name: 'Điều dưỡng / Kỹ thuật viên khoa', who: 'Người lĩnh vật tư cho khoa. Ví dụ: Nguyễn Thị Lan, Khoa Nội.', ini: 'NL', hue: 215,
+      menu: ['Hôm nay', 'Phiếu lĩnh', 'Tồn kho'],
+      jobs: ['Lập phiếu lĩnh vật tư cho khoa và gửi đi duyệt.', 'Theo dõi phiếu đang ở bước nào, ai đang giữ.', 'Lĩnh lại phiếu thường dùng chỉ với một lần bấm.', 'Sửa và gửi lại phiếu bị trả về hoặc bị từ chối.'],
+      code: 'NV0231', button: 'Lập phiếu lĩnh', go: '#viec-lap-phieu' },
+    tk: { name: 'Trưởng khoa', who: 'Duyệt phiếu lĩnh của khoa mình. Ví dụ: Võ Thanh Bình, Trưởng khoa Nội.', ini: 'VB', hue: 60,
+      menu: ['Hôm nay', 'Phiếu lĩnh', 'Tồn kho', 'Báo cáo'],
+      jobs: ['Duyệt hoặc từ chối (kèm lý do) phiếu lĩnh của khoa, ngay trên màn Hôm nay.', 'Duyệt nhiều phiếu cùng lúc; lỡ tay thì Hoàn tác.', 'Theo dõi giá trị vật tư khoa đã lĩnh trong tháng, so với tháng trước.'],
+      code: 'NV0105', button: 'Tìm kiếm', go: '#viec-duyet' },
+    kho: { name: 'Thủ kho', who: 'Giữ kho chính, xác nhận và cấp phát, kiểm nhập hàng. Ví dụ: Trần Văn Hùng.', ini: 'TH', hue: 160,
+      menu: ['Hôm nay', 'Phiếu lĩnh', 'Nhập kho', 'Tồn kho', 'Báo cáo'],
+      jobs: ['Xác nhận phiếu lĩnh trong ngày, hoặc trả lại khoa khi thiếu hàng.', 'Cấp phát đúng lô (hết hạn trước xuất trước), quét tem lô để chắc chắn.', 'In chứng từ xuất kho cho khoa ký nhận.', 'Kiểm nhập hàng mới về: đạt / không đạt, đối chiếu giá hợp đồng.', 'Theo dõi lô sắp hết hạn và vật tư dưới tồn tối thiểu.'],
+      code: 'NV0412', button: 'Quét mã lô', go: '#viec-cap-phat' },
+    vt: { name: 'Trưởng P.VTTBYT', who: 'Trưởng phòng Vật tư – Thiết bị y tế. Ví dụ: Lê Thị Kim Hạnh.', ini: 'LH', hue: 300,
+      menu: ['Hôm nay', 'Phiếu lĩnh', 'Nhập kho', 'Tồn kho', 'Báo cáo'],
+      jobs: ['Duyệt lần cuối phiếu lĩnh của mọi khoa, có thể duyệt nhiều phiếu cùng lúc.', 'Ký duyệt phiếu nhập kho sau khi kế toán xác nhận hóa đơn.', 'Quyết định xử lý lô hết hạn, lô biệt trữ (trả nhà cung cấp hoặc hủy).', 'Xem báo cáo xuất – nhập – tồn và dự trù tháng.'],
+      code: 'NV0058', button: 'Tìm kiếm', go: '#viec-duyet' },
+    kt: { name: 'Kế toán dược', who: 'Thuộc P.TCKT, đối chiếu hóa đơn và theo dõi số liệu. Ví dụ: Phạm Minh Tuấn.', ini: 'PT', hue: 25,
+      menu: ['Hôm nay', 'Nhập kho', 'Tồn kho', 'Báo cáo'],
+      jobs: ['Đối chiếu hóa đơn với hợp đồng; dòng lệch giá được tô đỏ sẵn.', 'Xác nhận hóa đơn để chuyển phiếu nhập lên ký duyệt.', 'Xem báo cáo xuất – nhập – tồn, theo khoa; tải về mở bằng Excel.'],
+      code: 'NV0377', button: 'Tìm kiếm', go: '#viec-bao-cao' }
+  };
+  var panel = document.getElementById('role-panel');
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.roles [role="tab"]'));
+  function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function render(key) {
+    var r = ROLES[key]; if (!r) return;
+    tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.role === key)); t.tabIndex = t.dataset.role === key ? 0 : -1; });
+    panel.setAttribute('aria-labelledby', 'tab-' + key);
+    panel.innerHTML =
+      '<div class="role-head"><div class="avatar" style="background:hsl(' + r.hue + ' 55% 42%)">' + esc(r.ini) + '</div>' +
+      '<div><h3>' + esc(r.name) + '</h3><p>' + esc(r.who) + '</p></div></div>' +
+      '<div><p class="small muted">Menu bạn thấy</p><div class="chips">' + r.menu.map(function (m) { return '<span class="chip">' + esc(m) + '</span>'; }).join('') + '</div></div>' +
+      '<ul>' + r.jobs.map(function (j) { return '<li>' + esc(j) + '</li>'; }).join('') + '</ul>' +
+      '<p class="login">Tài khoản mẫu: mã <code>' + r.code + '</code>, mật khẩu <code>123456</code>. Nút tròn cạnh thanh tab (điện thoại) là <b>' + esc(r.button) + '</b>. ' +
+      '<a href="' + r.go + '" data-open>Xem việc chính của bạn →</a></p>';
+    try { localStorage.setItem('hd-vai-tro', key); } catch (e) {}
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { render(t.dataset.role); });
+    t.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      var n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); render(n.dataset.role);
+    });
+  });
+  try { var saved = localStorage.getItem('hd-vai-tro'); if (saved && ROLES[saved]) render(saved); } catch (e) {}
+
+  /* Bấm liên kết tới một việc thì mở sẵn khung việc đó */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute('href').slice(1));
+    if (el && el.tagName === 'DETAILS') el.open = true;
+  });
+
+  /* Mục lục: mở sẵn trên máy tính, đánh dấu mục đang đọc */
+  var tocDetails = document.getElementById('toc-details');
+  if (window.matchMedia('(min-width: 1000px)').matches) tocDetails.open = true;
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc .links a'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        links.forEach(function (l) { l.classList.toggle('on', l.getAttribute('href') === '#' + en.target.id); });
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    links.forEach(function (l) { var s = document.querySelector(l.getAttribute('href')); if (s) io.observe(s); });
+  }
+})();
+</script>
