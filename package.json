@@ -1,0 +1,1 @@
+{"name":"vtyt-kho","private":true,"scripts":{"dev":"live-server docs/prototype-v2 --port=5173 --no-browser"},"devDependencies":{"live-server":"^1.2.2"}}
