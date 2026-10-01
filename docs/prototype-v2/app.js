@@ -154,7 +154,7 @@ function ton(){
   const rows=VT.filter(v=>!q||(v.ten+v.ma+LO.filter(l=>l.ma===v.ma).map(l=>l.so).join(' ')).toLowerCase().includes(q)).map(v=>{
     const t=totalLot(v.ma),low=t<v.tonMin,open=S.tOpen.has(v.ma),lots=LO.filter(l=>l.ma===v.ma).sort((a,b)=>a.hsd<b.hsd?-1:1);
     return `<div class="grp"><div class="tr g" data-tg="${v.ma}" role="button" tabindex="0" aria-expanded="${open}">
-     <div class="name">${icon('right','chev')}<span class="grip" aria-hidden="true">⋮⋮</span><span class="ficon">${icon('box')}</span><span>${esc(v.ten)} <span class="cnt mono">· ${v.ma}</span></span></div>
+     <div class="name">${icon('right','chev')}<span class="grip" aria-hidden="true">⋮⋮</span><span class="ficon">${icon('box')}</span><span>${esc(v.ten)}&nbsp;<span class="cnt mono">· ${v.ma}</span></span></div>
      <div style="color:var(--mut)">${v.bq}</div><div style="color:var(--mut);grid-column:span 2">${v.nhom}</div>
      <div>${pill(low?'p-rej':'p-done',low?'Dưới tối thiểu':'Đủ hàng')}</div><div class="r mono"><b>${nf(t)}</b> <span class="cnt">${v.dvt}</span></div><span></span></div>
      ${open?`<div class="kids">${lots.map(l=>{const d=days(pd(l.hsd)),[pc,pt]=lotState(l);
