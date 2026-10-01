@@ -2,37 +2,269 @@
 @import "@nuxt/ui";
 
 @theme static {
-  --font-sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Xanh dược: OKLCH scale around #0B7A55 (hue 163) */
+  --color-duoc-50: #E9FCF2;
+  --color-duoc-100: #D1FAE5;
+  --color-duoc-200: #AAF0CE;
+  --color-duoc-300: #76E0B1;
+  --color-duoc-400: #46CC97;
+  --color-duoc-500: #0FAC79;
+  --color-duoc-600: #068059;
+  --color-duoc-700: #046948;
+  --color-duoc-800: #055238;
+  --color-duoc-900: #063D29;
+  --color-duoc-950: #042317;
+
+  /* Apple-style neutrals */
+  --color-graphite-50: #F5F5F7;
+  --color-graphite-100: #EDEDF0;
+  --color-graphite-200: #E3E3E8;
+  --color-graphite-300: #D2D2D7;
+  --color-graphite-400: #AEAEB2;
+  --color-graphite-500: #8E8E93;
+  --color-graphite-600: #6E6E73;
+  --color-graphite-700: #48484A;
+  --color-graphite-800: #2C2C2E;
+  --color-graphite-900: #1C1C1E;
+  --color-graphite-950: #000000;
+
+  --radius-group: 20px;
+  --radius-sheet: 28px;
+
+  /* Type scale. Large titles track tighter, as display sizes should. */
+  --text-display: 40px;
+  --text-display--line-height: 46px;
+  --text-display--letter-spacing: -0.026em;
+  --text-display--font-weight: 700;
+  --text-title: 34px;
+  --text-title--line-height: 40px;
+  --text-title--letter-spacing: -0.022em;
+  --text-title--font-weight: 700;
+  --text-title-2: 28px;
+  --text-title-2--line-height: 34px;
+  --text-title-2--letter-spacing: -0.02em;
+  --text-title-2--font-weight: 700;
+  --text-title-3: 20px;
+  --text-title-3--line-height: 26px;
+  --text-title-3--letter-spacing: -0.012em;
+  --text-title-3--font-weight: 600;
+  --text-headline: 16px;
+  --text-headline--line-height: 22px;
+  --text-headline--letter-spacing: -0.006em;
+  --text-headline--font-weight: 600;
+  --text-callout: 14px;
+  --text-callout--line-height: 20px;
+  --text-footnote: 13px;
+  --text-footnote--line-height: 18px;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-settle: settle 0.9s var(--ease-out-quint) both;
+  --animate-pop: pop 0.32s var(--ease-out-quint) both;
 }
 
+@keyframes settle {
+  from { opacity: 0; transform: translateY(18px) scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes scan-line {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(var(--scan-travel, 120px)); }
+}
+
+/* ---------- Tokens ---------- */
 :root {
-  /* md=8px (controls), lg~10.7px (cards) */
-  --ui-radius: 0.3333rem;
+  --ui-radius: 0.5rem;
+
+  --page: #F5F5F7;
+  --tile: #F2F2F5;
+  --fill: rgb(118 118 128 / 0.12);
+  --fill-strong: rgb(118 118 128 / 0.2);
+  --hairline: #E3E3E8;
+  --glass: rgb(250 250 252 / 0.78);
+  --glass-strong: rgb(250 250 252 / 0.9);
+  --glass-edge: rgb(0 0 0 / 0.06);
+  --shadow-float: 0 0 0 0.5px rgb(0 0 0 / 0.05), 0 2px 6px rgb(0 0 0 / 0.04), 0 12px 32px -6px rgb(0 0 0 / 0.14);
+  --shadow-raise: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.08);
+
+  --tint-fill: #0B7A55;
+  --tint-fill-hover: #096A4A;
+  --danger-fill: #D70015;
+  --danger-fill-hover: #BC0012;
+
+  /* Marks (dots, bars, icons) are the bright system hues; text uses the deep ones (AA on white). */
+  --mark-red: #FF3B30;
+  --mark-orange: #FF9500;
+  --mark-green: #22B07D;
+  --mark-cyan: #32ADE6;
+  --mark-gray: #AEAEB2;
+
+  /* Charts: slot-1 green validated (dataviz) on #FFFFFF; de-emphasis grey for context marks */
+  --chart-1: #068059;
+  --chart-muted: #D2D2D7;
+
+  --ui-primary: #0B7A55;
+  --ui-secondary: #0B7A55;
+  --ui-success: #0B7A55;
+  --ui-info: #0071A4;
+  --ui-warning: #B25000;
+  --ui-error: #D70015;
+
+  --ui-bg: #FFFFFF;
+  --ui-bg-muted: #F5F5F7;
+  --ui-bg-elevated: #F0F0F3;
+  --ui-bg-accented: #E5E5EA;
+  --ui-bg-inverted: #1D1D1F;
+  --ui-border: #E3E3E8;
+  --ui-border-muted: #EDEDF0;
+  --ui-border-accented: #D2D2D7;
+  --ui-border-inverted: #1D1D1F;
+  --ui-text-dimmed: #7C7C80;
+  --ui-text-muted: #6E6E73;
+  --ui-text-toned: #48484A;
+  --ui-text: #1D1D1F;
+  --ui-text-highlighted: #1D1D1F;
+  --ui-text-inverted: #FFFFFF;
 }
 
-/* Prototype v2 "Tem lô dark" surfaces */
 .dark {
-  --ui-primary: #F2A900;
-  --ui-bg: #0B0D0F;
-  --ui-bg-muted: #121519;
-  --ui-bg-elevated: #181C21;
-  --ui-bg-accented: #1D2228;
-  --ui-border: #252A31;
-  --ui-border-muted: #1D2228;
-  --ui-border-accented: #323943;
-  --ui-text: #ECEDEE;
-  --ui-text-toned: #C5C9CE;
-  --ui-text-muted: #9BA1A9;
-  --ui-text-dimmed: #808892;
-  --ui-text-highlighted: #ECEDEE;
-  --ui-success: #3FB97B;
-  --ui-error: #F26C65;
-  --ui-info: #8FA3BF;
-  --ui-warning: #F2A900;
+  --page: #000000;
+  --tile: #2C2C2E;
+  --fill: rgb(118 118 128 / 0.24);
+  --fill-strong: rgb(118 118 128 / 0.34);
+  --hairline: #38383A;
+  --glass: rgb(28 28 30 / 0.74);
+  --glass-strong: rgb(28 28 30 / 0.9);
+  --glass-edge: rgb(255 255 255 / 0.08);
+  --shadow-float: 0 0 0 0.5px rgb(255 255 255 / 0.08), 0 12px 32px -6px rgb(0 0 0 / 0.7);
+  --shadow-raise: 0 0 0 0.5px rgb(255 255 255 / 0.06), 0 1px 3px rgb(0 0 0 / 0.5);
+
+  --tint-fill: #11845A;
+  --tint-fill-hover: #149463;
+  --danger-fill: #E0281F;
+  --danger-fill-hover: #EC3A30;
+
+  --mark-red: #FF453A;
+  --mark-orange: #FF9F0A;
+  --mark-green: #30C48D;
+  --mark-cyan: #64D2FF;
+  --mark-gray: #636366;
+
+  --chart-1: #0FAC79;
+  --chart-muted: #48484A;
+
+  --ui-primary: #3DD39A;
+  --ui-secondary: #3DD39A;
+  --ui-success: #3DD39A;
+  --ui-info: #70D7FF;
+  --ui-warning: #FFB340;
+  --ui-error: #FF6961;
+
+  --ui-bg: #1C1C1E;
+  --ui-bg-muted: #2C2C2E;
+  --ui-bg-elevated: #2C2C2E;
+  --ui-bg-accented: #3A3A3C;
+  --ui-bg-inverted: #F5F5F7;
+  --ui-border: #38383A;
+  --ui-border-muted: #2C2C2E;
+  --ui-border-accented: #48484A;
+  --ui-border-inverted: #F5F5F7;
+  --ui-text-dimmed: #7C7C80;
+  --ui-text-muted: #98989D;
+  --ui-text-toned: #C7C7CC;
+  --ui-text: #F5F5F7;
+  --ui-text-highlighted: #FFFFFF;
+  --ui-text-inverted: #1C1C1E;
+}
+
+/* ---------- Base ---------- */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  background-color: var(--page);
 }
 
 body {
-  font-variant-numeric: normal;
+  background-color: var(--page);
+  color: var(--ui-text);
+  font-size: 16px;
+  line-height: 1.375;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@media (min-width: 1024px) {
+  body { font-size: 15px; }
+}
+
+::selection { background: color-mix(in oklab, var(--ui-primary) 28%, transparent); }
+
+/* Form fields draw their own focus ring (Nuxt UI, or the grouped login rows) */
+:where(a, button, [role='button'], summary, [tabindex]:not(input, textarea, select)):focus-visible {
+  outline: 2px solid var(--ui-primary);
+  outline-offset: 2px;
+}
+
+h1, h2, h3 { text-wrap: balance; }
+
+/* Thin, quiet scrollbars for inner panes on desktop */
+@media (pointer: fine) {
+  .scroll-pane { scrollbar-width: thin; scrollbar-color: var(--fill-strong) transparent; }
+}
+
+/* ---------- Utilities ---------- */
+@utility glass {
+  background-color: var(--glass);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+}
+@utility glass-edge {
+  box-shadow: inset 0 0 0 0.5px var(--glass-edge);
+}
+@utility shadow-float {
+  box-shadow: var(--shadow-float);
+}
+@utility shadow-raise {
+  box-shadow: var(--shadow-raise);
+}
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+@utility hairline {
+  border-color: var(--hairline);
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* Page transition: a quick cross-fade, nothing more */
+.page-enter-active, .page-leave-active { transition: opacity 0.14s ease; }
+.page-enter-from, .page-leave-to { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print: only the document, no app chrome */
+@media print {
+  html, body { background: #fff !important; }
+  .no-print { display: none !important; }
 }
